@@ -8,8 +8,7 @@
         (change)="logEvent($event, 'change')"
         (input)="logEvent($event, 'input')"
         (slider)="logEvent($event, 'slider')"
-        >
-      </ngx-colors>
+      ></ngx-colors>
       <div>{{ color }}</div>
     </div>
 
@@ -17,9 +16,10 @@
       Change color externally
     </button>
   </div>
+
   <div class="logs">
     @for (log of logs; track log; let i = $index) {
-      <div class="row" @inOutAnimation>
+      <div class="row row-enter">
         <div class="number">{{ log[0] }}</div>
         <div>
           <span>{{ log[1] }}: </span><b>{{ log[2] }}</b>

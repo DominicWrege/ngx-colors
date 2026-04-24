@@ -1,3 +1,12 @@
+@keyframes logRowEnter {
+  0% {
+    background: red;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
 .logs {
   width: 250px;
   height: 300px;
@@ -12,6 +21,7 @@
     display: flex;
     height: 30px;
     display: flex;
+    animation: logRowEnter 1s ease-out;
     div {
       display: flex;
       align-items: center;

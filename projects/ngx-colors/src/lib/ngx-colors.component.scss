@@ -1,4 +1,4 @@
-@import "./shared/variables.scss";
+@use "./shared/variables.scss" as *;
 :host {
   .app-color-picker {
     line-height: 1px;

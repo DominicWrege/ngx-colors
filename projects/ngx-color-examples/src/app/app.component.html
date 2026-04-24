@@ -45,13 +45,13 @@
         (click)="scrollIntoView()"
         [active]="activeLink == link.url"
         [routerLink]="link.url"
-        >
+      >
         {{ link.text }}
       </a>
     }
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
-  <div [@routerTransition]="getRouteAnimationData()">
+  <div>
     <router-outlet></router-outlet>
   </div>
 </div>
