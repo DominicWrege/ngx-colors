@@ -5,10 +5,10 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  ViewChild,
   ElementRef,
   HostListener,
   HostBinding,
+  viewChild
 } from '@angular/core';
 import {
   trigger,
@@ -88,7 +88,7 @@ export class PanelComponent implements OnInit {
 
   @HostBinding('style.top.px') public top: number;
   @HostBinding('style.left.px') public left: number;
-  @ViewChild('dialog') panelRef: ElementRef;
+  readonly panelRef = viewChild<ElementRef>('dialog');
   constructor(
     public service: ConverterService,
     private cdr: ChangeDetectorRef
@@ -144,8 +144,9 @@ export class PanelComponent implements OnInit {
   private onScreenMovement() {
     this.setPosition();
     this.setPositionY();
-    if (!this.panelRef.nativeElement.style.transition) {
-      this.panelRef.nativeElement.style.transition = 'transform 0.5s ease-out';
+    const panelRef = this.panelRef();
+    if (!panelRef.nativeElement.style.transition) {
+      panelRef.nativeElement.style.transition = 'transform 0.5s ease-out';
     }
   }
 
@@ -268,7 +269,7 @@ export class PanelComponent implements OnInit {
 
   private setPositionY(): void {
     const triggerBBox = this.TriggerBBox.nativeElement.getBoundingClientRect();
-    const panelBBox = this.panelRef.nativeElement.getBoundingClientRect();
+    const panelBBox = this.panelRef().nativeElement.getBoundingClientRect();
     const panelHeight = panelBBox.height;
     // Check for space below the trigger
     if (triggerBBox.bottom + panelHeight > window.innerHeight) {

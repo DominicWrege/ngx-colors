@@ -1,5 +1,5 @@
 import { NgxColorsTriggerDirective } from './ngx-colors-trigger.directive';
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { NgxColorsModule } from '../ngx-colors.module';
 import { NgxColorsComponent } from '../ngx-colors.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -51,8 +51,7 @@ describe('NgxColorsTriggerDirective', () => {
     ]
 })
         class TestHostComponent {
-            @ViewChild(NgxColorsComponent)
-            public component!: NgxColorsComponent;
+            public readonly component = viewChild.required(NgxColorsComponent);
 
             public color: string | null | undefined = undefined;
             public readonly COLOR_PALETTE = COLOR_PALETTE;
@@ -72,7 +71,7 @@ describe('NgxColorsTriggerDirective', () => {
             fixture = TestBed.createComponent(testHostComponent);
             hostComponent = fixture.componentInstance;
             fixture.detectChanges();
-            hostComponent.component.ngOnInit();
+            hostComponent.component().ngOnInit();
             await waitForChanges(fixture);
         });
 
@@ -122,8 +121,7 @@ describe('NgxColorsTriggerDirective', () => {
     ]
 })
         class TestHostComponent {
-            @ViewChild(NgxColorsComponent)
-            public component!: NgxColorsComponent;
+            public readonly component = viewChild.required(NgxColorsComponent);
 
             public readonly COLOR_PALETTE = COLOR_PALETTE;
 
@@ -147,7 +145,7 @@ describe('NgxColorsTriggerDirective', () => {
             fixture = TestBed.createComponent(testHostComponent);
             hostComponent = fixture.componentInstance;
             fixture.detectChanges();
-            hostComponent.component.ngOnInit();
+            hostComponent.component().ngOnInit();
             await waitForChanges(fixture);
         });
 

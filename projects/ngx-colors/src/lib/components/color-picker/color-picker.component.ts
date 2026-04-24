@@ -3,14 +3,14 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
-  ViewChild,
   ViewEncapsulation,
   ElementRef,
   ChangeDetectorRef,
   Input,
   OnChanges,
   input,
-  output
+  output,
+  viewChild
 } from "@angular/core";
 
 import { Cmyk, Hsla, Hsva, Rgba } from "../../clases/formats";
@@ -52,8 +52,8 @@ export class ColorPickerComponent
   public hueSliderColor: string;
   public alphaSliderColor: string;
 
-  @ViewChild("hueSlider", { static: false }) hueSlider: ElementRef;
-  @ViewChild("alphaSlider", { static: false }) alphaSlider: ElementRef;
+  readonly hueSlider = viewChild<ElementRef>("hueSlider");
+  readonly alphaSlider = viewChild<ElementRef>("alphaSlider");
 
   constructor(
     private service: ConverterService,
@@ -77,8 +77,8 @@ export class ColorPickerComponent
   }
 
   ngAfterViewInit(): void {
-    const hueWidth = this.hueSlider?.nativeElement.offsetWidth || 140;
-    const alphaWidth = this.alphaSlider?.nativeElement.offsetWidth || 140;
+    const hueWidth = this.hueSlider()?.nativeElement.offsetWidth || 140;
+    const alphaWidth = this.alphaSlider()?.nativeElement.offsetWidth || 140;
     this.sliderDimMax = new SliderDimension(hueWidth, 220, 130, alphaWidth);
     this.update();
   }
