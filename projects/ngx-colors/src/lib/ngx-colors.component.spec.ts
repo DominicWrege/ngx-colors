@@ -8,8 +8,8 @@ describe('NgxColorsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NgxColorsComponent ]
-    })
+    imports: [NgxColorsComponent]
+})
     .compileComponents();
   }));
 

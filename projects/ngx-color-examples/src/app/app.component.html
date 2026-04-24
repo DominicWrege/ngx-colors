@@ -39,15 +39,16 @@
   </div>
 
   <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-    <a
-      mat-tab-link
-      (click)="scrollIntoView()"
-      *ngFor="let link of links"
-      [active]="activeLink == link.url"
-      [routerLink]="link.url"
-    >
-      {{ link.text }}
-    </a>
+    @for (link of links; track link) {
+      <a
+        mat-tab-link
+        (click)="scrollIntoView()"
+        [active]="activeLink == link.url"
+        [routerLink]="link.url"
+        >
+        {{ link.text }}
+      </a>
+    }
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   <div [@routerTransition]="getRouteAnimationData()">

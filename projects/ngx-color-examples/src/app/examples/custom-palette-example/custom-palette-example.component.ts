@@ -1,10 +1,16 @@
 import { Component, OnInit } from "@angular/core";
 import { NgxColorsColor } from "../../../../../ngx-colors/src/public-api";
+import { NgxColorsComponent } from "../../../../../ngx-colors/src/lib/ngx-colors.component";
+import { NgxColorsTriggerDirective } from "../../../../../ngx-colors/src/lib/directives/ngx-colors-trigger.directive";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MatButton } from "@angular/material/button";
+import { JsonPipe } from "@angular/common";
 
 @Component({
-  selector: "app-custom-palette-example",
-  templateUrl: "./custom-palette-example.component.html",
-  styleUrls: ["./custom-palette-example.component.scss"],
+    selector: "app-custom-palette-example",
+    templateUrl: "./custom-palette-example.component.html",
+    styleUrls: ["./custom-palette-example.component.scss"],
+    imports: [NgxColorsComponent, NgxColorsTriggerDirective, ReactiveFormsModule, FormsModule, MatButton, JsonPipe]
 })
 export class CustomPaletteExampleComponent {
   constructor() {}

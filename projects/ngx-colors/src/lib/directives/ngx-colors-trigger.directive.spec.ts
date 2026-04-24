@@ -35,7 +35,7 @@ describe('NgxColorsTriggerDirective', () => {
     describe('a ngx-colors control in a template driven form', () => {
 
         @Component({
-            template: `
+    template: `
                 <form #form="ngForm">
                     <ngx-colors ngx-colors-trigger
                                 name="color"
@@ -44,13 +44,12 @@ describe('NgxColorsTriggerDirective', () => {
                                 [palette]="COLOR_PALETTE"/>
                 </form>
             `,
-            standalone: true,
-            changeDetection: ChangeDetectionStrategy.Default,
-            imports: [
-                NgxColorsModule,
-                FormsModule,
-            ]
-        })
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [
+        NgxColorsModule,
+        FormsModule,
+    ]
+})
         class TestHostComponent {
             @ViewChild(NgxColorsComponent)
             public component!: NgxColorsComponent;
@@ -108,7 +107,7 @@ describe('NgxColorsTriggerDirective', () => {
     describe('a ngx-colors control in a reactive form', () => {
 
         @Component({
-            template: `
+    template: `
                 <form [formGroup]="form">
                     <ngx-colors ngx-colors-trigger
                                 formControlName="color"
@@ -116,13 +115,12 @@ describe('NgxColorsTriggerDirective', () => {
                                 [palette]="COLOR_PALETTE"/>
                 </form>
             `,
-            standalone: true,
-            changeDetection: ChangeDetectionStrategy.Default,
-            imports: [
-                NgxColorsModule,
-                ReactiveFormsModule,
-            ],
-        })
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [
+        NgxColorsModule,
+        ReactiveFormsModule,
+    ]
+})
         class TestHostComponent {
             @ViewChild(NgxColorsComponent)
             public component!: NgxColorsComponent;

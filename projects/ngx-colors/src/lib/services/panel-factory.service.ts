@@ -9,8 +9,9 @@ import {
   ApplicationRef,
   EmbeddedViewRef,
   ComponentRef,
+  DOCUMENT
 } from "@angular/core";
-import { DOCUMENT } from "@angular/common";
+
 import { PanelComponent } from "../components/panel/panel.component";
 import { OVERLAY_STYLES } from "./overlay-styles";
 

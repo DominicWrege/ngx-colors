@@ -1,11 +1,15 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { validColorValidator } from "../../../../../ngx-colors/src/public-api";
+import { MatFormField, MatLabel, MatInput, MatSuffix, MatError } from "@angular/material/input";
+import { NgxColorsComponent } from "../../../../../ngx-colors/src/lib/ngx-colors.component";
+import { NgxColorsTriggerDirective } from "../../../../../ngx-colors/src/lib/directives/ngx-colors-trigger.directive";
 
 @Component({
-  selector: "app-validator-example",
-  templateUrl: "./validator-example.component.html",
-  styleUrls: ["./validator-example.component.scss"],
+    selector: "app-validator-example",
+    templateUrl: "./validator-example.component.html",
+    styleUrls: ["./validator-example.component.scss"],
+    imports: [ReactiveFormsModule, MatFormField, MatLabel, MatInput, NgxColorsComponent, MatSuffix, NgxColorsTriggerDirective, MatError]
 })
 export class ValidatorExampleComponent implements OnInit {
   constructor() {}

@@ -27,58 +27,47 @@ import { formats } from '../../helpers/formats';
 import { NgxColorsTriggerDirective } from '../../directives/ngx-colors-trigger.directive';
 import { Hsva } from '../../clases/formats';
 import { NgxColorsColor } from '../../clases/color';
+import { NgStyle } from '@angular/common';
+import { ColorPickerComponent } from '../color-picker/color-picker.component';
 
 @Component({
-  selector: 'ngx-colors-panel',
-  templateUrl: './panel.component.html',
-  styleUrls: ['./panel.component.scss'],
-  animations: [
-    trigger('colorsAnimation', [
-      transition('void => slide-in', [
-        // Initially all colors are hidden
-        query(':enter', style({ opacity: 0 }), { optional: true }),
-        //slide-in animation
-        query(
-          ':enter',
-          stagger('10ms', [
-            animate(
-              '.3s ease-in',
-              keyframes([
-                style({ opacity: 0, transform: 'translatex(-50%)', offset: 0 }),
-                style({
-                  opacity: 0.5,
-                  transform: 'translatex(-10px) scale(1.1)',
-                  offset: 0.3,
+    selector: 'ngx-colors-panel',
+    templateUrl: './panel.component.html',
+    styleUrls: ['./panel.component.scss'],
+    animations: [
+        trigger('colorsAnimation', [
+            transition('void => slide-in', [
+                // Initially all colors are hidden
+                query(':enter', style({ opacity: 0 }), { optional: true }),
+                //slide-in animation
+                query(':enter', stagger('10ms', [
+                    animate('.3s ease-in', keyframes([
+                        style({ opacity: 0, transform: 'translatex(-50%)', offset: 0 }),
+                        style({
+                            opacity: 0.5,
+                            transform: 'translatex(-10px) scale(1.1)',
+                            offset: 0.3,
+                        }),
+                        style({ opacity: 1, transform: 'translatex(0)', offset: 1 }),
+                    ])),
+                ]), { optional: true }),
+            ]),
+            //popup animation
+            transition('void => popup', [
+                query(':enter', style({ opacity: 0, transform: 'scale(0)' }), {
+                    optional: true,
                 }),
-                style({ opacity: 1, transform: 'translatex(0)', offset: 1 }),
-              ])
-            ),
-          ]),
-          { optional: true }
-        ),
-      ]),
-      //popup animation
-      transition('void => popup', [
-        query(':enter', style({ opacity: 0, transform: 'scale(0)' }), {
-          optional: true,
-        }),
-        query(
-          ':enter',
-          stagger('10ms', [
-            animate(
-              '500ms ease-out',
-              keyframes([
-                style({ opacity: 0.5, transform: 'scale(.5)', offset: 0.3 }),
-                style({ opacity: 1, transform: 'scale(1.1)', offset: 0.8 }),
-                style({ opacity: 1, transform: 'scale(1)', offset: 1 }),
-              ])
-            ),
-          ]),
-          { optional: true }
-        ),
-      ]),
-    ]),
-  ],
+                query(':enter', stagger('10ms', [
+                    animate('500ms ease-out', keyframes([
+                        style({ opacity: 0.5, transform: 'scale(.5)', offset: 0.3 }),
+                        style({ opacity: 1, transform: 'scale(1.1)', offset: 0.8 }),
+                        style({ opacity: 1, transform: 'scale(1)', offset: 1 }),
+                    ])),
+                ]), { optional: true }),
+            ]),
+        ]),
+    ],
+    imports: [NgStyle, ColorPickerComponent]
 })
 export class PanelComponent implements OnInit {
   @HostListener('document:mousedown', ['$event'])

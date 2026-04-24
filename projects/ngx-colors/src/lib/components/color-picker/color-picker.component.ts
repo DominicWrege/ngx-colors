@@ -18,12 +18,15 @@ import { ColorFormats } from "../../enums/formats";
 import { SliderDimension, SliderPosition } from "../../clases/slider";
 
 import { ConverterService } from "../../services/converter.service";
+import { SliderDirective } from "../../directives/slider.directive";
+import { NgStyle } from "@angular/common";
 
 @Component({
-  selector: "color-picker",
-  templateUrl: "./color-picker.component.html",
-  styleUrls: ["./color-picker.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+    selector: "color-picker",
+    templateUrl: "./color-picker.component.html",
+    styleUrls: ["./color-picker.component.scss"],
+    encapsulation: ViewEncapsulation.None,
+    imports: [SliderDirective, NgStyle]
 })
 export class ColorPickerComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges

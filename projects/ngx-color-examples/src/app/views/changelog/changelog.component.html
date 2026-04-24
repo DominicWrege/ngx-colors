@@ -1,15 +1,19 @@
 <div class="documentation">
-  <div *ngFor="let version of versions">
-    <ng-container *ngIf="version.version != 'x.x.x'">
-      <div class="version-number">{{ version.version }}</div>
-      <div *ngFor="let change of version.changelog">
-        <div
-          [class.fix]="change.type == 'fix'"
-          [class.feature]="change.type == 'feature'"
-          [class.performance]="change.type == 'performance'"
-        ></div>
-        <span>{{ change.details }}</span>
-      </div>
-    </ng-container>
-  </div>
+  @for (version of versions; track version) {
+    <div>
+      @if (version.version != 'x.x.x') {
+        <div class="version-number">{{ version.version }}</div>
+        @for (change of version.changelog; track change) {
+          <div>
+            <div
+              [class.fix]="change.type == 'fix'"
+              [class.feature]="change.type == 'feature'"
+              [class.performance]="change.type == 'performance'"
+            ></div>
+            <span>{{ change.details }}</span>
+          </div>
+        }
+      }
+    </div>
+  }
 </div>

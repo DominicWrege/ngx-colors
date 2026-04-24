@@ -25,10 +25,11 @@ import {
 } from "@angular/router";
 import { slideInAnimation } from "./const/router.animations";
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
-  animations: [slideInAnimation],
+    selector: "app-root",
+    templateUrl: "./app.component.html",
+    styleUrls: ["./app.component.scss"],
+    animations: [slideInAnimation],
+    standalone: false
 })
 export class AppComponent implements OnInit {
   title = "ngx-color-examples";

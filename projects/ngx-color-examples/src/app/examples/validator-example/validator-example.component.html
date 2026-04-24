@@ -8,10 +8,11 @@
       ngx-colors-trigger
       formControlName="pickerCtrl"
     ></ngx-colors>
-    <mat-error
-      *ngIf="this.exampleForm.controls['inputCtrl'].hasError('invalidColor')"
-    >
-      The color is invalid.
-    </mat-error>
+    @if (this.exampleForm.controls['inputCtrl'].hasError('invalidColor')) {
+      <mat-error
+        >
+        The color is invalid.
+      </mat-error>
+    }
   </mat-form-field>
 </form>

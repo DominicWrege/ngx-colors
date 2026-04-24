@@ -19,14 +19,14 @@ import { ColorFormats } from '../enums/formats';
 import { Direction } from '../types/direction';
 
 @Directive({
-  selector: '[ngx-colors-trigger]',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NgxColorsTriggerDirective),
-      multi: true,
-    },
-  ],
+    selector: '[ngx-colors-trigger]',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NgxColorsTriggerDirective),
+            multi: true,
+        },
+    ]
 })
 export class NgxColorsTriggerDirective
   implements ControlValueAccessor, OnDestroy

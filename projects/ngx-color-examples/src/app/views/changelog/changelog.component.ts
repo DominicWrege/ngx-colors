@@ -2,9 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: "app-changelog-example",
-  templateUrl: "./changelog.component.html",
-  styleUrls: ["./changelog.component.scss"],
+    selector: "app-changelog-example",
+    templateUrl: "./changelog.component.html",
+    styleUrls: ["./changelog.component.scss"]
 })
 export class ChangelogComponent implements OnInit {
   constructor(private http: HttpClient) {}

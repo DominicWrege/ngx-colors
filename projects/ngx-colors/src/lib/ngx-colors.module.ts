@@ -10,15 +10,12 @@ import { PanelFactoryService } from "./services/panel-factory.service";
 import { NgxColorsTriggerDirective } from "./directives/ngx-colors-trigger.directive";
 
 @NgModule({
-  declarations: [
-    NgxColorsComponent,
-    ColorPickerComponent,
-    SliderDirective,
-    PanelComponent,
-    NgxColorsTriggerDirective,
-  ],
-  imports: [CommonModule],
-  providers: [ConverterService, PanelFactoryService],
-  exports: [NgxColorsComponent, NgxColorsTriggerDirective],
+    imports: [CommonModule, NgxColorsComponent,
+        ColorPickerComponent,
+        SliderDirective,
+        PanelComponent,
+        NgxColorsTriggerDirective],
+    providers: [ConverterService, PanelFactoryService],
+    exports: [NgxColorsComponent, NgxColorsTriggerDirective],
 })
 export class NgxColorsModule {}

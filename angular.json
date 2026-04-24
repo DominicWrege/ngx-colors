@@ -59,12 +59,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ngx-color-examples",
+            "outputPath": {
+              "base": "dist/ngx-color-examples"
+            },
             "index": "projects/ngx-color-examples/src/index.html",
-            "main": "projects/ngx-color-examples/src/main.ts",
-            "polyfills": "projects/ngx-color-examples/src/polyfills.ts",
+            "polyfills": [
+              "projects/ngx-color-examples/src/polyfills.ts"
+            ],
             "tsConfig": "projects/ngx-color-examples/tsconfig.app.json",
             "assets": [
               "projects/ngx-color-examples/src/favicon.ico",
@@ -77,12 +80,11 @@
               "projects/ngx-color-examples/src/styles.scss"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "projects/ngx-color-examples/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -97,8 +99,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -118,18 +118,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-color-examples:build"
+            "buildTarget": "ngx-color-examples:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-color-examples:build:production"
+              "buildTarget": "ngx-color-examples:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-color-examples:build"
+            "buildTarget": "ngx-color-examples:build"
           }
         },
         "test": {
@@ -178,5 +178,31 @@
   },
   "cli": {
     "analytics": "f0a0278b-fd65-4730-b6cc-109b254781b5"
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
   }
 }

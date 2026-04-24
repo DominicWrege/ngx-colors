@@ -1,7 +1,11 @@
 <div class="code-wrapper">
-<mat-tab-group class="remove-border-bottom">
-    <ng-container *ngFor="let document of documents">
-    <mat-tab [label]="document.label" *ngIf="document.content">  <pre><code [languages]="document.leng" [highlight]="document.content"></code></pre></mat-tab>
-    </ng-container>
-</mat-tab-group>
+  <mat-tab-group class="remove-border-bottom">
+    @for (document of documents; track document) {
+      @if (document.content) {
+        <mat-tab [label]="document.label">
+          <pre><code language="html" [highlight]="document.content"></code></pre>
+        </mat-tab>
+      }
+    }
+  </mat-tab-group>
 </div>
