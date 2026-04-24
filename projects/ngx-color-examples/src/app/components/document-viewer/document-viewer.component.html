@@ -1,6 +1,6 @@
 <div class="code-wrapper">
   <mat-tab-group class="remove-border-bottom">
-    @for (document of documents; track document) {
+    @for (document of documents(); track document) {
       @if (document.content) {
         <mat-tab [label]="document.label">
           <pre><code language="html" [highlight]="document.content"></code></pre>

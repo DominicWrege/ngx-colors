@@ -8,9 +8,9 @@ import {
   ElementRef,
   ChangeDetectorRef,
   Input,
-  Output,
-  EventEmitter,
   OnChanges,
+  input,
+  output
 } from "@angular/core";
 
 import { Cmyk, Hsla, Hsva, Rgba } from "../../clases/formats";
@@ -33,10 +33,10 @@ export class ColorPickerComponent
 {
   //IO color
   @Input() color: Hsva = new Hsva(0, 1, 1, 1);
-  @Input() controls: "default" | "only-alpha" | "no-alpha" = "default";
-  @Input() dir: 'ltr' | 'rtl' = 'ltr';
-  @Output() sliderChange: EventEmitter<Hsva> = new EventEmitter<Hsva>(false);
-  @Output() onAlphaChange: EventEmitter<any> = new EventEmitter<any>(false);
+  readonly controls = input<"default" | "only-alpha" | "no-alpha">("default");
+  readonly dir = input<'ltr' | 'rtl'>('ltr');
+  readonly sliderChange = output<Hsva>();
+  readonly onAlphaChange = output<any>();
   //Event triggered when any slider change
   // @Output() colorSelectedChange:EventEmitter<Hsva> = new EventEmitter<Hsva>(false);
 

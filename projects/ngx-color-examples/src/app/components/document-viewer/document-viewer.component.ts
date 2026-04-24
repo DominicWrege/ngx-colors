@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, input } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { MatTabGroup, MatTab } from "@angular/material/tabs";
 import { Highlight } from "ngx-highlightjs";
@@ -12,14 +12,14 @@ import { Highlight } from "ngx-highlightjs";
 export class DocumentViewerComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
-  @Input() documents: any;
+  readonly documents = input<any>(undefined);
 
   ngOnInit(): void {
-    for (let i = 0; i < this.documents.length; i++) {
+    for (let i = 0; i < this.documents().length; i++) {
       this.http
-        .get(this.documents[i].file, { responseType: "text" })
+        .get(this.documents()[i].file, { responseType: "text" })
         .subscribe((data) => {
-          this.documents[i]["content"] = data;
+          this.documents()[i]["content"] = data;
         });
     }
   }

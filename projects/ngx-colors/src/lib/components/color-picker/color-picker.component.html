@@ -1,5 +1,5 @@
-<div #dialogPopup class="color-picker" [attr.dir]="dir" (click)="$event.stopPropagation()">
-  @if (this.controls != 'only-alpha') {
+<div #dialogPopup class="color-picker" [attr.dir]="dir()" (click)="$event.stopPropagation()">
+  @if (this.controls() != 'only-alpha') {
     <div
       class="saturation-lightness"
       [slider]
@@ -15,7 +15,7 @@
   }
 
   <div class="hue-alpha box">
-    @if (this.controls != 'only-alpha') {
+    @if (this.controls() != 'only-alpha') {
       <div class="left">
         <div class="selected-color-background"></div>
         <div
@@ -26,7 +26,7 @@
     }
 
     <div class="right">
-      @if (this.controls != 'only-alpha') {
+      @if (this.controls() != 'only-alpha') {
         <div
           #hueSlider
           class="hue"
@@ -40,7 +40,7 @@
         </div>
       }
 
-      @if (this.controls != 'no-alpha') {
+      @if (this.controls() != 'no-alpha') {
         <div
           #alphaSlider
           class="alpha"

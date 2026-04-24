@@ -1,23 +1,11 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  APP_ID,
-  AfterViewInit,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { examples } from "./const/examples";
 import { snippets } from "./const/snippets";
 import { api } from "./const/api";
-import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  FormControl,
-} from "@angular/forms";
-import { NgxColorsColor } from "projects/ngx-colors/src/public-api";
-import { validColorValidator } from "projects/ngx-colors/src/public-api";
+import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
+
 import {
   ChildrenOutletContexts,
   Router,
@@ -25,11 +13,11 @@ import {
 } from "@angular/router";
 import { slideInAnimation } from "./const/router.animations";
 @Component({
-    selector: "app-root",
-    templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.scss"],
-    animations: [slideInAnimation],
-    standalone: false
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+  animations: [slideInAnimation],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   title = "ngx-color-examples";
@@ -43,7 +31,7 @@ export class AppComponent implements OnInit {
     public domSanitizer: DomSanitizer,
     public http: HttpClient,
     private contexts: ChildrenOutletContexts,
-    private router: Router
+    private router: Router,
   ) {}
 
   getRouteAnimationData() {
@@ -119,7 +107,7 @@ export class AppComponent implements OnInit {
         this.leftColor +
         " 0%," +
         this.rightColor +
-        " 100%)"
+        " 100%)",
     );
   }
 

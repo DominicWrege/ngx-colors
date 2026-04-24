@@ -1,13 +1,12 @@
 import {
-  EventEmitter,
-  Input,
-  Output,
   Directive,
   ElementRef,
   ComponentRef,
   HostListener,
   forwardRef,
   OnDestroy,
+  input,
+  output
 } from '@angular/core';
 import { PanelFactoryService } from '../services/panel-factory.service';
 import { PanelComponent } from '../components/panel/panel.component';
@@ -38,31 +37,30 @@ export class NgxColorsTriggerDirective
   color = '';
 
   //This defines the type of animation for the palatte.(slide-in | popup)
-  @Input() colorsAnimation: 'slide-in' | 'popup' = 'slide-in';
+  readonly colorsAnimation = input<'slide-in' | 'popup'>('slide-in');
 
   //This is used to set a custom palette of colors in the panel;
-  @Input() palette: Array<string> | Array<NgxColorsColor>;
+  readonly palette = input<Array<string> | Array<NgxColorsColor>>(undefined);
 
-  @Input() dir: Direction = 'ltr';
-  @Input() format: string;
-  @Input() formats: string[];
-  @Input() position: 'top' | 'bottom' = 'bottom';
-  @Input() hideTextInput: boolean;
-  @Input() hideColorPicker: boolean;
-  @Input() attachTo: string | undefined = undefined;
-  @Input() overlayClassName: string | undefined = undefined;
-  @Input() colorPickerControls: 'default' | 'only-alpha' | 'no-alpha' =
-    'default';
-  @Input() acceptLabel: string = 'ACCEPT';
-  @Input() cancelLabel: string = 'CANCEL';
+  readonly dir = input<Direction>('ltr');
+  readonly format = input<string>(undefined);
+  readonly formats = input<string[]>(undefined);
+  readonly position = input<'top' | 'bottom'>('bottom');
+  readonly hideTextInput = input<boolean>(undefined);
+  readonly hideColorPicker = input<boolean>(undefined);
+  readonly attachTo = input<string | undefined>(undefined);
+  readonly overlayClassName = input<string | undefined>(undefined);
+  readonly colorPickerControls = input<'default' | 'only-alpha' | 'no-alpha'>('default');
+  readonly acceptLabel = input<string>('ACCEPT');
+  readonly cancelLabel = input<string>('CANCEL');
   // This event is trigger every time the selected color change
-  @Output() change: EventEmitter<string> = new EventEmitter<string>();
+  readonly change = output<string>();
   // This event is trigger every time the user change the color using the panel
-  @Output() input: EventEmitter<string> = new EventEmitter<string>();
+  readonly input = output<string>();
   // This event is trigger every time the user change the color using the panel
-  @Output() slider: EventEmitter<string> = new EventEmitter<string>();
-  @Output() close: EventEmitter<string> = new EventEmitter<string>();
-  @Output() open: EventEmitter<string> = new EventEmitter<string>();
+  readonly slider = output<string>();
+  readonly close = output<string>();
+  readonly open = output<string>();
 
   @HostListener('click') onClick() {
     this.openPanel();
@@ -88,24 +86,24 @@ export class NgxColorsTriggerDirective
   public openPanel() {
     if (!this.isDisabled) {
       this.panelRef = this.panelFactory.createPanel(
-        this.attachTo,
-        this.overlayClassName
+        this.attachTo(),
+        this.overlayClassName()
       );
       this.panelRef.instance.iniciate(
         this,
         this.triggerRef,
         this.color,
-        this.palette,
-        this.colorsAnimation,
-        this.format,
-        this.hideTextInput,
-        this.hideColorPicker,
-        this.acceptLabel,
-        this.cancelLabel,
-        this.colorPickerControls,
-        this.position,
-        this.formats,
-        this.dir
+        this.palette(),
+        this.colorsAnimation(),
+        this.format(),
+        this.hideTextInput(),
+        this.hideColorPicker(),
+        this.acceptLabel(),
+        this.cancelLabel(),
+        this.colorPickerControls(),
+        this.position(),
+        this.formats(),
+        this.dir()
       );
     }
     this.open.emit(this.color);
@@ -143,8 +141,9 @@ export class NgxColorsTriggerDirective
 
   writeValue(value, previewColor = "") {
     if (value !== this.color) {
-      if (this.format) {
-        let format = formats.indexOf(this.format.toLowerCase());
+      const format = this.format();
+      if (format) {
+        let format = formats.indexOf(format.toLowerCase());
         value = this.service.stringToFormat(value, format);
       }
       this.color = value;

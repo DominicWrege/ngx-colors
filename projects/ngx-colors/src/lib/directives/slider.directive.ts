@@ -1,19 +1,19 @@
-import { Input, Directive, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Directive, HostListener, ElementRef, input, output } from '@angular/core';
 
 @Directive({ selector: '[slider]' })
   export class SliderDirective {
     private listenerMove: any;
     private listenerStop: any;
   
-    @Input() rgX: number;
-    @Input() rgY: number;
+    readonly rgX = input<number>(undefined);
+    readonly rgY = input<number>(undefined);
   
-    @Input() slider: string;
+    readonly slider = input<string>(undefined);
   
-    @Output() dragEnd = new EventEmitter();
-    @Output() dragStart = new EventEmitter();
+    readonly dragEnd = output();
+    readonly dragStart = output();
   
-    @Output() newValue = new EventEmitter<any>();
+    readonly newValue = output<any>();
   
     @HostListener('mousedown', ['$event']) mouseDown(event: any): void {
       this.start(event);
@@ -80,12 +80,14 @@ import { Input, Directive, Output, EventEmitter, HostListener, ElementRef } from
       const x = Math.max(0, Math.min(this.getX(event), width));
       const y = Math.max(0, Math.min(this.getY(event), height));
   
-      if (this.rgX !== undefined && this.rgY !== undefined) {
-        this.newValue.emit({ s: x / width, v: (1 - y / height), rgX: this.rgX, rgY: this.rgY });
-      } else if (this.rgX === undefined && this.rgY !== undefined) {
-        this.newValue.emit({ v: y / height, rgY: this.rgY });
-      } else if (this.rgX !== undefined && this.rgY === undefined) {
-        this.newValue.emit({ v: x / width, rgX: this.rgX });
+      const rgX = this.rgX();
+      const rgY = this.rgY();
+      if (rgX !== undefined && rgY !== undefined) {
+        this.newValue.emit({ s: x / width, v: (1 - y / height), rgX: rgX, rgY: rgY });
+      } else if (rgX === undefined && rgY !== undefined) {
+        this.newValue.emit({ v: y / height, rgY: rgY });
+      } else if (rgX !== undefined && rgY === undefined) {
+        this.newValue.emit({ v: x / width, rgX: rgX });
       }
     }
   }
