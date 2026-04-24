@@ -6,26 +6,26 @@ import {
   forwardRef,
   OnDestroy,
   input,
-  output
-} from '@angular/core';
-import { PanelFactoryService } from '../services/panel-factory.service';
-import { PanelComponent } from '../components/panel/panel.component';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgxColorsColor } from '../clases/color';
-import { ConverterService } from '../services/converter.service';
-import { formats } from '../helpers/formats';
-import { ColorFormats } from '../enums/formats';
-import { Direction } from '../types/direction';
+  output,
+} from "@angular/core";
+import { PanelFactoryService } from "../services/panel-factory.service";
+import { PanelComponent } from "../components/panel/panel.component";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { NgxColorsColor } from "../clases/color";
+import { ConverterService } from "../services/converter.service";
+import { formats } from "../helpers/formats";
+import { ColorFormats } from "../enums/formats";
+import { Direction } from "../types/direction";
 
 @Directive({
-    selector: '[ngx-colors-trigger]',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NgxColorsTriggerDirective),
-            multi: true,
-        },
-    ]
+  selector: "[ngx-colors-trigger]",
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NgxColorsTriggerDirective),
+      multi: true,
+    },
+  ],
 })
 export class NgxColorsTriggerDirective
   implements ControlValueAccessor, OnDestroy
@@ -34,25 +34,27 @@ export class NgxColorsTriggerDirective
   // @Input() color = '#000000';
   // @Output() colorChange:EventEmitter<string> = new EventEmitter<string>();
 
-  color = '';
+  color = "";
 
   //This defines the type of animation for the palatte.(slide-in | popup)
-  readonly colorsAnimation = input<'slide-in' | 'popup'>('slide-in');
+  readonly colorsAnimation = input<"slide-in" | "popup">("slide-in");
 
   //This is used to set a custom palette of colors in the panel;
-  readonly palette = input<Array<string> | Array<NgxColorsColor>>(undefined);
+  readonly palette = input<Array<string> | Array<NgxColorsColor>>([]);
 
-  readonly dir = input<Direction>('ltr');
-  readonly format = input<string>(undefined);
-  readonly formats = input<string[]>(undefined);
-  readonly position = input<'top' | 'bottom'>('bottom');
-  readonly hideTextInput = input<boolean>(undefined);
-  readonly hideColorPicker = input<boolean>(undefined);
+  readonly dir = input<Direction>("ltr");
+  readonly format = input<string>("");
+  readonly formats = input<string[]>([]);
+  readonly position = input<"top" | "bottom">("bottom");
+  readonly hideTextInput = input<boolean>(false);
+  readonly hideColorPicker = input<boolean>(false);
   readonly attachTo = input<string | undefined>(undefined);
   readonly overlayClassName = input<string | undefined>(undefined);
-  readonly colorPickerControls = input<'default' | 'only-alpha' | 'no-alpha'>('default');
-  readonly acceptLabel = input<string>('ACCEPT');
-  readonly cancelLabel = input<string>('CANCEL');
+  readonly colorPickerControls = input<"default" | "only-alpha" | "no-alpha">(
+    "default",
+  );
+  readonly acceptLabel = input<string>("ACCEPT");
+  readonly cancelLabel = input<string>("CANCEL");
   // This event is trigger every time the selected color change
   readonly change = output<string>();
   // This event is trigger every time the user change the color using the panel
@@ -62,16 +64,16 @@ export class NgxColorsTriggerDirective
   readonly close = output<string>();
   readonly open = output<string>();
 
-  @HostListener('click') onClick() {
+  @HostListener("click") onClick() {
     this.openPanel();
   }
   constructor(
     private triggerRef: ElementRef,
     private panelFactory: PanelFactoryService,
-    private service: ConverterService
+    private service: ConverterService,
   ) {}
 
-  panelRef: ComponentRef<PanelComponent>;
+  panelRef: ComponentRef<PanelComponent> | undefined;
   isDisabled: boolean = false;
 
   onTouchedCallback: () => void = () => {};
@@ -87,7 +89,7 @@ export class NgxColorsTriggerDirective
     if (!this.isDisabled) {
       this.panelRef = this.panelFactory.createPanel(
         this.attachTo(),
-        this.overlayClassName()
+        this.overlayClassName(),
       );
       this.panelRef.instance.iniciate(
         this,
@@ -103,7 +105,7 @@ export class NgxColorsTriggerDirective
         this.colorPickerControls(),
         this.position(),
         this.formats(),
-        this.dir()
+        this.dir(),
       );
     }
     this.open.emit(this.color);
@@ -120,13 +122,13 @@ export class NgxColorsTriggerDirective
     this.triggerRef.nativeElement.style.opacity = isDisabled ? 0.5 : 1;
   }
 
-  public setColor(color, previewColor = "") {
+  public setColor(color: string, previewColor = "") {
     this.writeValue(color, previewColor);
     this.onChangeCallback(color);
     this.input.emit(color);
   }
 
-  public sliderChange(color) {
+  public sliderChange(color: string) {
     this.slider.emit(color);
   }
 
@@ -139,24 +141,24 @@ export class NgxColorsTriggerDirective
     this.onChangeCallback(value);
   }
 
-  writeValue(value, previewColor = "") {
+  writeValue(value: string, previewColor = "") {
     if (value !== this.color) {
       const format = this.format();
       if (format) {
-        let format = formats.indexOf(format.toLowerCase());
-        value = this.service.stringToFormat(value, format);
+        let localFormat = formats.indexOf(format.toLowerCase());
+        value = this.service.stringToFormat(value, localFormat);
       }
       this.color = value;
 
       let isCmyk = false;
-      if( value && value.startsWith('cmyk')) {
+      if (value && value.startsWith("cmyk")) {
         isCmyk = true;
-        if( !previewColor ) {
+        if (!previewColor) {
           previewColor = this.service.stringToFormat(value, ColorFormats.RGBA);
         }
       }
 
-      this.change.emit( isCmyk ? previewColor : value);
+      this.change.emit(isCmyk ? previewColor : value);
     }
   }
 

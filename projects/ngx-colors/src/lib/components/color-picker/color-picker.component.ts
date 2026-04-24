@@ -10,23 +10,22 @@ import {
   OnChanges,
   input,
   output,
-  viewChild
+  viewChild,
 } from "@angular/core";
 
-import { Cmyk, Hsla, Hsva, Rgba } from "../../clases/formats";
-import { ColorFormats } from "../../enums/formats";
 import { SliderDimension, SliderPosition } from "../../clases/slider";
 
 import { ConverterService } from "../../services/converter.service";
 import { SliderDirective } from "../../directives/slider.directive";
 import { NgStyle } from "@angular/common";
+import { Hsva } from "../../clases/formats";
 
 @Component({
-    selector: "color-picker",
-    templateUrl: "./color-picker.component.html",
-    styleUrls: ["./color-picker.component.scss"],
-    encapsulation: ViewEncapsulation.None,
-    imports: [SliderDirective, NgStyle]
+  selector: "color-picker",
+  templateUrl: "./color-picker.component.html",
+  styleUrls: ["./color-picker.component.scss"],
+  encapsulation: ViewEncapsulation.None,
+  imports: [SliderDirective, NgStyle],
 })
 export class ColorPickerComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
@@ -34,30 +33,30 @@ export class ColorPickerComponent
   //IO color
   @Input() color: Hsva = new Hsva(0, 1, 1, 1);
   readonly controls = input<"default" | "only-alpha" | "no-alpha">("default");
-  readonly dir = input<'ltr' | 'rtl'>('ltr');
+  readonly dir = input<"ltr" | "rtl">("ltr");
   readonly sliderChange = output<Hsva>();
   readonly onAlphaChange = output<any>();
   //Event triggered when any slider change
   // @Output() colorSelectedChange:EventEmitter<Hsva> = new EventEmitter<Hsva>(false);
 
   private hsva: Hsva = new Hsva(0, 1, 1, 1);
-  private outputColor: Hsva;
+  private outputColor: Hsva | undefined;
   public selectedColor: string = "#000000";
   private fallbackColor: string = "#000000";
 
   // private sHue: number;
-  private sliderDimMax: SliderDimension;
-  public slider: SliderPosition;
+  private sliderDimMax: SliderDimension | undefined;
+  public slider: SliderPosition | undefined;
 
-  public hueSliderColor: string;
-  public alphaSliderColor: string;
+  public hueSliderColor: string | undefined;
+  public alphaSliderColor: string | undefined;
 
   readonly hueSlider = viewChild<ElementRef>("hueSlider");
   readonly alphaSlider = viewChild<ElementRef>("alphaSlider");
 
   constructor(
     private service: ConverterService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +82,10 @@ export class ColorPickerComponent
     this.update();
   }
 
-  public onSliderChange(type: string, event) {
+  public onSliderChange(
+    type: string,
+    event: { s: number; v: number; rgX: number; rgY: number },
+  ) {
     switch (type) {
       case "saturation-lightness":
         this.hsva.onColorChange(event);
@@ -101,15 +103,17 @@ export class ColorPickerComponent
     }
     // this.sHue = this.hsva.h;
     this.update();
-    this.setColor(this.outputColor);
+    if (this.outputColor) {
+      this.setColor(this.outputColor);
+    }
   }
 
-  setColor(color) {
+  setColor(color: Hsva) {
     this.color = color;
     this.sliderChange.emit(this.color);
   }
 
-  public getBackgroundColor(color) {
+  public getBackgroundColor(color: string) {
     return {
       background:
         "linear-gradient(90deg, rgba(36,0,0,0) 0%, " + color + " 100%)",
@@ -136,7 +140,7 @@ export class ColorPickerComponent
         this.hsva.h * this.sliderDimMax.h - 5,
         this.hsva.s * this.sliderDimMax.s - 8,
         (1 - this.hsva.v) * this.sliderDimMax.v - 8,
-        this.hsva.a * this.sliderDimMax.a - 5
+        this.hsva.a * this.sliderDimMax.a - 5,
       );
       this.cdr.detectChanges();
     }

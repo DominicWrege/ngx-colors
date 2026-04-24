@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 
 import { Cmyk, Rgba, Hsla, Hsva } from "../clases/formats";
 
-import { ColorPickerComponent } from "../components/color-picker/color-picker.component";
 import { ColorFormats } from "../enums/formats";
 
 @Injectable()
@@ -44,7 +43,10 @@ export class ConverterService {
 
   public stringToFormat(color: string, format: ColorFormats) {
     var hsva = this.stringToHsva(color, true);
-    return this.toFormat(hsva, format);
+    if (hsva) {
+      return this.toFormat(hsva, format);
+    }
+    return undefined;
   }
 
   public hsva2hsla(hsva: Hsva): Hsla {
@@ -95,25 +97,25 @@ export class ConverterService {
 
     switch (i % 6) {
       case 0:
-        (r = v), (g = t), (b = p);
+        ((r = v), (g = t), (b = p));
         break;
       case 1:
-        (r = q), (g = v), (b = p);
+        ((r = q), (g = v), (b = p));
         break;
       case 2:
-        (r = p), (g = v), (b = t);
+        ((r = p), (g = v), (b = t));
         break;
       case 3:
-        (r = p), (g = q), (b = v);
+        ((r = p), (g = q), (b = v));
         break;
       case 4:
-        (r = t), (g = p), (b = v);
+        ((r = t), (g = p), (b = v));
         break;
       case 5:
-        (r = v), (g = p), (b = q);
+        ((r = v), (g = p), (b = q));
         break;
       default:
-        (r = 0), (g = 0), (b = 0);
+        ((r = 0), (g = 0), (b = 0));
     }
 
     return new Rgba(r, g, b, a);
@@ -144,9 +146,9 @@ export class ConverterService {
   public hsvaToCmyk(hsva: Hsva): Cmyk {
     let rgba = this.hsvaToRgba(hsva);
     let cmyk = this.rgbaToCmyk(rgba);
-    
+
     return cmyk;
-}
+  }
 
   public rgbaToHsva(rgba: Rgba): Hsva {
     let h: number, s: number;
@@ -209,7 +211,7 @@ export class ConverterService {
       cmyk.m / 100,
       cmyk.y / 100,
       cmyk.k / 100,
-      cmyk.a
+      cmyk.a,
     );
   }
 
@@ -219,7 +221,7 @@ export class ConverterService {
       Math.floor(cmyk.m * 100),
       Math.floor(cmyk.y * 100),
       Math.floor(cmyk.k * 100),
-      cmyk.a
+      cmyk.a,
     );
   }
 
@@ -228,13 +230,13 @@ export class ConverterService {
       Math.round(rgba.r * 255),
       Math.round(rgba.g * 255),
       Math.round(rgba.b * 255),
-      rgba.a
+      rgba.a,
     );
   }
 
   public stringToHsva(
     colorString: string = "",
-    allowHex8: boolean = true
+    allowHex8: boolean = true,
   ): Hsva | null {
     let hsva: Hsva | null = null;
 
@@ -248,7 +250,7 @@ export class ConverterService {
             parseInt(execResult[2], 10) / 255,
             parseInt(execResult[3], 10) / 255,
             parseInt(execResult[4], 10) / 255,
-            isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5])
+            isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5]),
           );
         },
       },
@@ -259,7 +261,7 @@ export class ConverterService {
             parseInt(execResult[2], 10) / 360,
             parseInt(execResult[3], 10) / 100,
             parseInt(execResult[4], 10) / 100,
-            isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5])
+            isNaN(parseFloat(execResult[5])) ? 1 : parseFloat(execResult[5]),
           );
         },
       },
@@ -270,7 +272,7 @@ export class ConverterService {
             parseInt(execResult[1], 10) / 100,
             parseInt(execResult[2], 10) / 100,
             parseInt(execResult[3], 10) / 100,
-            parseInt(execResult[4], 10) / 100
+            parseInt(execResult[4], 10) / 100,
           );
         },
       },
@@ -284,7 +286,7 @@ export class ConverterService {
             parseInt(execResult[1], 16) / 255,
             parseInt(execResult[2], 16) / 255,
             parseInt(execResult[3], 16) / 255,
-            parseInt(execResult[4] || "FF", 16) / 255
+            parseInt(execResult[4] || "FF", 16) / 255,
           );
         },
       });
@@ -296,7 +298,7 @@ export class ConverterService {
             parseInt(execResult[1], 16) / 255,
             parseInt(execResult[2], 16) / 255,
             parseInt(execResult[3], 16) / 255,
-            1
+            1,
           );
         },
       });
@@ -309,7 +311,7 @@ export class ConverterService {
           parseInt(execResult[1] + execResult[1], 16) / 255,
           parseInt(execResult[2] + execResult[2], 16) / 255,
           parseInt(execResult[3] + execResult[3], 16) / 255,
-          1
+          1,
         );
       },
     });
@@ -351,8 +353,7 @@ export class ConverterService {
         /(rgba\((\d{1,3},\s?){3}(1|0?\.\d+)\)|rgb\(\d{1,3}(,\s?\d{1,3}){2}\))/;
       let regexHSLA: RegExp =
         /(hsla\((\d{1,3}%?,\s?){3}(1|0?\.\d+)\)|hsl\(\d{1,3}%?(,\s?\d{1,3}%?){2}\))/;
-      let regexCMYK: RegExp =
-        /(cmyk\(\d{1,3}(,\s?\d{1,3}){3}\))/;
+      let regexCMYK: RegExp = /(cmyk\(\d{1,3}(,\s?\d{1,3}){3}\))/;
       if (regexHex.test(color)) {
         return "hex";
       } else if (regexRGBA.test(color)) {
