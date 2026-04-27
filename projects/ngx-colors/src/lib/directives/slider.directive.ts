@@ -11,8 +11,8 @@ export class SliderDirective {
   private listenerMove: any;
   private listenerStop: any;
 
-  readonly rgX = input<number>(0);
-  readonly rgY = input<number>(0);
+  readonly rgX = input<number | undefined>(undefined);
+  readonly rgY = input<number | undefined>(undefined);
 
   readonly slider = input<string>("");
 
@@ -81,6 +81,17 @@ export class SliderDirective {
     return pageY - position.top - window.pageYOffset;
   }
 
+  private isRtl(): boolean {
+    const host = this.elRef.nativeElement as HTMLElement;
+    const nearestDir = host.closest("[dir]")?.getAttribute("dir");
+
+    if (nearestDir) {
+      return nearestDir.toLowerCase() === "rtl";
+    }
+
+    return getComputedStyle(host).direction === "rtl";
+  }
+
   private setCursor(event: any): void {
     const width = this.elRef.nativeElement.offsetWidth;
     const height = this.elRef.nativeElement.offsetHeight;
@@ -90,17 +101,22 @@ export class SliderDirective {
 
     const rgX = this.rgX();
     const rgY = this.rgY();
-    if (rgX !== undefined && rgY !== undefined) {
+    const normalizedX = this.isRtl() ? 1 - x / width : x / width;
+
+    const hasX = rgX !== undefined;
+    const hasY = rgY !== undefined;
+
+    if (hasX && hasY) {
       this.newValue.emit({
-        s: x / width,
+        s: normalizedX,
         v: 1 - y / height,
         rgX: rgX,
         rgY: rgY,
       });
-    } else if (rgX === undefined && rgY !== undefined) {
+    } else if (!hasX && hasY) {
       this.newValue.emit({ v: y / height, rgY: rgY });
-    } else if (rgX !== undefined && rgY === undefined) {
-      this.newValue.emit({ v: x / width, rgX: rgX });
+    } else if (hasX && !hasY) {
+      this.newValue.emit({ v: normalizedX, rgX: rgX });
     }
   }
 }

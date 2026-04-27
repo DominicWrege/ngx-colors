@@ -7,6 +7,7 @@ import {
   OnDestroy,
   input,
   output,
+  signal,
 } from "@angular/core";
 import { PanelFactoryService } from "../services/panel-factory.service";
 import { PanelComponent } from "../components/panel/panel.component";
@@ -34,7 +35,7 @@ export class NgxColorsTriggerDirective
   // @Input() color = '#000000';
   // @Output() colorChange:EventEmitter<string> = new EventEmitter<string>();
 
-  color = "";
+  readonly color = signal("");
 
   //This defines the type of animation for the palatte.(slide-in | popup)
   readonly colorsAnimation = input<"slide-in" | "popup">("slide-in");
@@ -94,7 +95,7 @@ export class NgxColorsTriggerDirective
       this.panelRef.instance.iniciate(
         this,
         this.triggerRef,
-        this.color,
+        this.color(),
         this.palette(),
         this.colorsAnimation(),
         this.format(),
@@ -108,13 +109,13 @@ export class NgxColorsTriggerDirective
         this.dir(),
       );
     }
-    this.open.emit(this.color);
+    this.open.emit(this.color());
   }
 
   public closePanel() {
     this.panelFactory.removePanel();
     this.onTouchedCallback();
-    this.close.emit(this.color);
+    this.close.emit(this.color());
   }
 
   public setDisabledState(isDisabled: boolean): void {
@@ -133,7 +134,7 @@ export class NgxColorsTriggerDirective
   }
 
   get value(): string {
-    return this.color;
+    return this.color();
   }
 
   set value(value: string) {
@@ -141,14 +142,14 @@ export class NgxColorsTriggerDirective
     this.onChangeCallback(value);
   }
 
-  writeValue(value: string, previewColor = "") {
-    if (value !== this.color) {
+  writeValue(value: string | undefined, previewColor = "") {
+    if (value !== this.color()) {
       const format = this.format();
       if (format) {
         let localFormat = formats.indexOf(format.toLowerCase());
-        value = this.service.stringToFormat(value, localFormat);
+        value = this.service.stringToFormat(value ?? "", localFormat);
       }
-      this.color = value;
+      this.color.set(value ?? "");
 
       let isCmyk = false;
       if (value && value.startsWith("cmyk")) {

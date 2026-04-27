@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   OutputRefSubscription,
+  inject,
 } from "@angular/core";
 import { NgxColorsTriggerDirective } from "./directives/ngx-colors-trigger.directive";
 import { NgStyle } from "@angular/common";
@@ -19,15 +20,14 @@ export class NgxColorsComponent implements OnInit, OnDestroy {
   private triggerDirectiveColorChangeSubscription: OutputRefSubscription | null =
     null;
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    @Host() private triggerDirective: NgxColorsTriggerDirective,
-  ) {}
+  readonly cdRef = inject(ChangeDetectorRef);
+
+  constructor(@Host() private triggerDirective: NgxColorsTriggerDirective) {}
 
   ngOnInit(): void {
     this.triggerDirectiveColorChangeSubscription =
       this.triggerDirective.change.subscribe((color) => {
-        this.color = color;
+        this.color.set(color);
         this.cdRef.markForCheck();
       });
   }
@@ -39,5 +39,5 @@ export class NgxColorsComponent implements OnInit, OnDestroy {
   }
 
   //IO color
-  color: string = this.triggerDirective.color;
+  readonly color = this.triggerDirective.color;
 }

@@ -3,14 +3,15 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
-  ViewEncapsulation,
   ElementRef,
   ChangeDetectorRef,
-  Input,
   OnChanges,
   input,
   output,
   viewChild,
+  model,
+  signal,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 
 import { SliderDimension, SliderPosition } from "../../clases/slider";
@@ -24,14 +25,14 @@ import { Hsva } from "../../clases/formats";
   selector: "color-picker",
   templateUrl: "./color-picker.component.html",
   styleUrls: ["./color-picker.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SliderDirective, NgStyle],
 })
 export class ColorPickerComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
 {
   //IO color
-  @Input() color: Hsva = new Hsva(0, 1, 1, 1);
+  readonly color = model(new Hsva(0, 1, 1, 1));
   readonly controls = input<"default" | "only-alpha" | "no-alpha">("default");
   readonly dir = input<"ltr" | "rtl">("ltr");
   readonly sliderChange = output<Hsva>();
@@ -41,8 +42,7 @@ export class ColorPickerComponent
 
   private hsva: Hsva = new Hsva(0, 1, 1, 1);
   private outputColor: Hsva | undefined;
-  public selectedColor: string = "#000000";
-  private fallbackColor: string = "#000000";
+  public selectedColor = signal("#000000");
 
   // private sHue: number;
   private sliderDimMax: SliderDimension | undefined;
@@ -61,7 +61,7 @@ export class ColorPickerComponent
 
   ngOnInit(): void {
     if (!this.color) {
-      this.color = new Hsva(0, 1, 1, 1);
+      this.setColor(new Hsva(0, 1, 1, 1));
     }
     this.slider = new SliderPosition(0, 0, 0, 0);
     this.update();
@@ -70,7 +70,7 @@ export class ColorPickerComponent
   ngOnDestroy(): void {}
 
   ngOnChanges(changes: any): void {
-    if (changes.color && this.color) {
+    if (changes.color && this.color()) {
       this.update();
     }
   }
@@ -109,8 +109,8 @@ export class ColorPickerComponent
   }
 
   setColor(color: Hsva) {
-    this.color = color;
-    this.sliderChange.emit(this.color);
+    this.color.set(color);
+    this.sliderChange.emit(this.color());
   }
 
   public getBackgroundColor(color: string) {
@@ -121,8 +121,12 @@ export class ColorPickerComponent
   }
 
   private update(): void {
-    this.hsva = this.color;
+    this.hsva = this.color();
     if (this.sliderDimMax) {
+      const isRtl = this.dir() === "rtl";
+      const horizontalPosition = (value: number, max: number, offset: number) =>
+        (isRtl ? 1 - value : value) * max - offset;
+
       let rgba = this.service.hsvaToRgba(this.hsva).denormalize();
       let hue = this.service
         .hsvaToRgba(new Hsva(this.hsva.h, 1, 1, 1))
@@ -133,14 +137,14 @@ export class ColorPickerComponent
         "rgb(" + rgba.r + "," + rgba.g + "," + rgba.b + ")";
 
       this.outputColor = this.hsva;
-      this.selectedColor = this.service.hsvaToRgba(this.hsva).toString();
+      this.selectedColor.set(this.service.hsvaToRgba(this.hsva).toString());
 
       this.slider = new SliderPosition(
         // (this.sHue || this.hsva.h) * this.sliderDimMax.h - 8,
-        this.hsva.h * this.sliderDimMax.h - 5,
-        this.hsva.s * this.sliderDimMax.s - 8,
+        horizontalPosition(this.hsva.h, this.sliderDimMax.h, 5),
+        horizontalPosition(this.hsva.s, this.sliderDimMax.s, 8),
         (1 - this.hsva.v) * this.sliderDimMax.v - 8,
-        this.hsva.a * this.sliderDimMax.a - 5,
+        horizontalPosition(this.hsva.a, this.sliderDimMax.a, 5),
       );
       this.cdr.detectChanges();
     }

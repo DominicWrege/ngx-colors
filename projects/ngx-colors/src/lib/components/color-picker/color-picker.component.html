@@ -1,5 +1,10 @@
-<div #dialogPopup class="color-picker" [attr.dir]="dir()" (click)="$event.stopPropagation()">
-  @if (this.controls() != 'only-alpha') {
+<div
+  #dialogPopup
+  class="color-picker"
+  [attr.dir]="dir()"
+  (click)="$event.stopPropagation()"
+>
+  @if (this.controls() != "only-alpha") {
     <div
       class="saturation-lightness"
       [slider]
@@ -7,47 +12,51 @@
       [rgY]="1"
       [style.background-color]="hueSliderColor"
       (newValue)="onSliderChange('saturation-lightness', $event)"
+    >
+      <div
+        class="cursor"
+        [style.top.px]="slider?.v"
+        [style.left.px]="slider?.s"
       >
-      <div class="cursor" [style.top.px]="slider?.v" [style.left.px]="slider?.s">
         <div></div>
       </div>
     </div>
   }
 
   <div class="hue-alpha box">
-    @if (this.controls() != 'only-alpha') {
+    @if (this.controls() != "only-alpha") {
       <div class="left">
         <div class="selected-color-background"></div>
         <div
           class="selected-color"
-          [style.background-color]="selectedColor"
+          [style.background-color]="selectedColor()"
         ></div>
       </div>
     }
 
     <div class="right">
-      @if (this.controls() != 'only-alpha') {
+      @if (this.controls() != "only-alpha") {
         <div
           #hueSlider
           class="hue"
           [slider]
           [rgX]="1"
           (newValue)="onSliderChange('hue', $event)"
-          >
+        >
           <div class="sliderCursor" [style.left.px]="slider?.h">
             <div><div></div></div>
           </div>
         </div>
       }
 
-      @if (this.controls() != 'no-alpha') {
+      @if (this.controls() != "no-alpha") {
         <div
           #alphaSlider
           class="alpha"
           [slider]
           [rgX]="1"
           (newValue)="onSliderChange('alpha', $event)"
-          >
+        >
           <div
             class="alpha-gradient"
             [ngStyle]="getBackgroundColor(alphaSliderColor)"

@@ -3,8 +3,8 @@
     <div class="preview-background">
       <div
         class="circle"
-        [class.colornull]="!color"
-        [ngStyle]="{ background: color }"
+        [class.colornull]="!color()"
+        [ngStyle]="{ background: color() }"
       ></div>
     </div>
   </div>

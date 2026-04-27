@@ -1,7 +1,7 @@
-<div class="opened" [style]="positionString" [attr.dir]="dir" #dialog>
-  @if (menu == 1) {
+<div class="opened" [style]="positionString()" [attr.dir]="dir()" #dialog>
+  @if (menu() == 1) {
     <div class="colors">
-      @for (color of palette; track color; let i = $index) {
+      @for (color of palette(); track color; let i = $index) {
         <div class="circle wrapper color">
           <div
             (click)="onColorClick(color)"
@@ -33,7 +33,7 @@
                 top: 0;
                 right: 0;
               "
-              [ngStyle]="getBackgroundColor(color)"
+              [ngStyle]="getBackgroundColor(color())"
             ></div>
           }
           <svg
@@ -55,8 +55,8 @@
       @if (!hideColorPicker && this.colorPickerControls == "only-alpha") {
         <color-picker
           [controls]="colorPickerControls"
-          [color]="hsva"
-          [dir]="dir"
+          [color]="hsva()"
+          [dir]="dir()"
           (colorChange)="onChangeColorPicker($event)"
           (onAlphaChange)="onAlphaChange($event)"
         ></color-picker>
@@ -64,7 +64,7 @@
     </div>
   }
 
-  @if (menu == 2) {
+  @if (menu() == 2) {
     <div class="colors">
       <div class="circle wrapper">
         <div (click)="onClickBack()" class="add">
@@ -73,7 +73,7 @@
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            [class.rtl-icon]="dir === 'rtl'"
+            [class.rtl-icon]="dir() === 'rtl'"
           >
             <path d="M0 0h24v24H0z" fill="none" />
             <path
@@ -83,7 +83,7 @@
         </div>
       </div>
 
-      @for (variant of variants; track variant) {
+      @for (variant of variants(); track variant) {
         <div class="circle wrapper color">
           <div
             [class.colornull]="!variant"
@@ -100,19 +100,19 @@
     </div>
   }
 
-  @if (menu == 3) {
-    <div class="nav-wrapper" [class.rtl-nav]="dir === 'rtl'">
+  @if (menu() == 3) {
+    <div class="nav-wrapper" [class.rtl-nav]="dir() === 'rtl'">
       <div
         (click)="onClickBack()"
         class="round-button button"
-        [class.rtl-button]="dir === 'rtl'"
+        [class.rtl-button]="dir() === 'rtl'"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          [class.rtl-icon]="dir === 'rtl'"
+          [class.rtl-icon]="dir() === 'rtl'"
         >
           <path d="M0 0h24v24H0z" fill="none" />
           <path
@@ -120,19 +120,25 @@
           />
         </svg>
       </div>
-      <button (click)="emitClose('cancel')" [class.rtl-button]="dir === 'rtl'">
-        {{ cancelLabel }}
+      <button
+        (click)="emitClose('cancel')"
+        [class.rtl-button]="dir() === 'rtl'"
+      >
+        {{ cancelLabel() }}
       </button>
-      <button (click)="emitClose('accept')" [class.rtl-button]="dir === 'rtl'">
-        {{ acceptLabel }}
+      <button
+        (click)="emitClose('accept')"
+        [class.rtl-button]="dir() === 'rtl'"
+      >
+        {{ acceptLabel() }}
       </button>
     </div>
     <div class="color-picker-wrapper">
       <!-- <span [(colorPicker)]="color"></span> -->
       <color-picker
         [controls]="colorPickerControls"
-        [color]="hsva"
-        [dir]="dir"
+        [color]="hsva()"
+        [dir]="dir()"
         (sliderChange)="onChangeColorPicker($event)"
       ></color-picker>
     </div>
@@ -145,9 +151,9 @@
       </p>
       <div class="g-input">
         <input
-          [placeholder]="placeholder"
+          [placeholder]="placeholder()"
           type="text"
-          [value]="color"
+          [value]="color()"
           [style.font-size.px]="color && color.length > 23 ? 9 : 10"
           [style.letter-spacing.px]="color && color.length > 16 ? 0 : 1.5"
           (keyup)="changeColorManual(paintInput.value)"

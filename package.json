@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "ng serve --host localhost",
     "build": "ng build",
     "lint": "ng lint",
     "build-lib": "ng build --configuration production ngx-colors",
