@@ -4,17 +4,15 @@ import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { NgxColorsModule } from "projects/ngx-colors/src/public-api";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import {
-  HttpClient,
   provideHttpClient,
   withInterceptorsFromDi,
 } from "@angular/common/http";
-import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { HighlightModule, provideHighlightOptions } from "ngx-highlightjs";
 import { CustomTriggerExampleComponent } from "./examples/custom-trigger-example/custom-trigger-example.component";
 import { DocumentViewerComponent } from "./components/document-viewer/document-viewer.component";
 import { HideElementsExampleComponent } from "./examples/hide-elements-example/hide-elements-example.component";
@@ -30,13 +28,6 @@ import { ApiComponent } from "./views/api/api.component";
 import { ExamplesComponent } from "./views/examples/examples.component";
 import { ChangelogComponent } from "./views/changelog/changelog.component";
 import { DirectionExampleComponent } from "./examples/direction-example/direction-example.component";
-export function getHighlightLanguages() {
-  return {
-    typescript: () => import("highlight.js/lib/languages/typescript"),
-    css: () => import("highlight.js/lib/languages/css"),
-    xml: () => import("highlight.js/lib/languages/xml"),
-  };
-}
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,7 +36,6 @@ export function getHighlightLanguages() {
     HighlightModule,
     BrowserModule,
     ReactiveFormsModule,
-
     AppRoutingModule,
     NgxColorsModule,
     MatTabsModule,
@@ -70,14 +60,16 @@ export function getHighlightLanguages() {
     DirectionExampleComponent,
   ],
   providers: [
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        languages: getHighlightLanguages(),
+    provideHighlightOptions({
+      coreLibraryLoader: () => import("highlight.js/lib/core"),
+      lineNumbersLoader: () => import("ngx-highlightjs/line-numbers"),
+      languages: {
+        typescript: () => import("highlight.js/lib/languages/typescript"),
+        css: () => import("highlight.js/lib/languages/css"),
+        xml: () => import("highlight.js/lib/languages/xml"),
       },
-    },
+    }),
     provideHttpClient(withInterceptorsFromDi()),
-    provideAnimations(),
   ],
 })
 export class AppModule {}

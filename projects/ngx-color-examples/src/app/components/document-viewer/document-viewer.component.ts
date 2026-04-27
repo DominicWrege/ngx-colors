@@ -15,12 +15,21 @@ export class DocumentViewerComponent implements OnInit {
   readonly documents = input<any>(undefined);
 
   ngOnInit(): void {
-    for (let i = 0; i < this.documents().length; i++) {
-      this.http
-        .get(this.documents()[i].file, { responseType: "text" })
-        .subscribe((data) => {
-          this.documents()[i]["content"] = data;
-        });
+    const documents = this.documents();
+    if (!Array.isArray(documents) || documents.length === 0) {
+      return;
     }
+
+    documents.forEach((document) => {
+      if (!document?.file) {
+        return;
+      }
+
+      this.http
+        .get(document.file, { responseType: "text" })
+        .subscribe((data) => {
+          document.content = data;
+        });
+    });
   }
 }
