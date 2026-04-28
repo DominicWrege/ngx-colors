@@ -19,6 +19,8 @@
         (change)="updateGradient()"
         style="float: left"
         [(ngModel)]="rightColor"
+        [hideColorPicker]="false"
+        [hideTextInput]="false"
         [palette]="customPalette"
       ></ngx-colors>
       <div class="color">{{ rightColor }}</div>

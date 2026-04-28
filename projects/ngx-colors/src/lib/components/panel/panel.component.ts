@@ -9,6 +9,7 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
+  Signal,
 } from "@angular/core";
 
 import { ColorFormats } from "../../enums/formats";
@@ -93,7 +94,9 @@ export class PanelComponent implements OnInit {
   public hideTextInput = signal(false);
   public acceptLabel = signal<string | undefined>(undefined);
   public cancelLabel = signal<string | undefined>(undefined);
-  public colorPickerControls: "default" | "only-alpha" | "no-alpha" = "default";
+  public colorPickerControls = signal<"default" | "only-alpha" | "no-alpha">(
+    "default",
+  );
   public dir = signal<"ltr" | "rtl">("ltr");
   private triggerInstance!: NgxColorsTriggerDirective;
   private TriggerBBox: ElementRef | undefined;
@@ -165,7 +168,7 @@ export class PanelComponent implements OnInit {
     userFormats = [],
     dir = "ltr",
   }: PanelInitiateOptions) {
-    this.colorPickerControls = colorPickerControls;
+    this.colorPickerControls.set(colorPickerControls);
     this.triggerInstance = triggerInstance;
     this.TriggerBBox = triggerElementRef;
     this.color.set(color);

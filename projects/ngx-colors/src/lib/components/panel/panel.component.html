@@ -16,7 +16,7 @@
         </div>
       }
 
-      @if (!hideColorPicker && this.colorPickerControls != "only-alpha") {
+      @if (!hideColorPicker() && this.colorPickerControls() != "only-alpha") {
         <div
           style="background: rgb(245 245 245); position: relative"
           (click)="addColor()"
@@ -52,9 +52,9 @@
         </div>
       }
 
-      @if (!hideColorPicker && this.colorPickerControls == "only-alpha") {
+      @if (!hideColorPicker() && this.colorPickerControls() == "only-alpha") {
         <color-picker
-          [controls]="colorPickerControls"
+          [controls]="colorPickerControls()"
           [color]="hsva()"
           [dir]="dir()"
           (colorChange)="onChangeColorPicker($event)"
@@ -136,7 +136,7 @@
     <div class="color-picker-wrapper">
       <!-- <span [(colorPicker)]="color"></span> -->
       <color-picker
-        [controls]="colorPickerControls"
+        [controls]="colorPickerControls()"
         [color]="hsva()"
         [dir]="dir()"
         (sliderChange)="onChangeColorPicker($event)"
@@ -144,7 +144,7 @@
     </div>
   }
 
-  @if (!hideTextInput) {
+  @if (!hideTextInput()) {
     <div class="manual-input-wrapper">
       <p (click)="nextFormat()" style="cursor: pointer">
         {{ colorFormats[format] }}
