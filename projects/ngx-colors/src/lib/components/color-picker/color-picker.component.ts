@@ -4,7 +4,6 @@ import {
   OnDestroy,
   AfterViewInit,
   ElementRef,
-  ChangeDetectorRef,
   OnChanges,
   input,
   output,
@@ -46,9 +45,8 @@ export class ColorPickerComponent
   private outputColor: Hsva | undefined;
   public selectedColor = signal("#000000");
 
-  // private sHue: number;
   private sliderDimMax: SliderDimension | undefined;
-  public slider: SliderPosition | undefined; // todo signal
+  public slider = signal<SliderPosition | undefined>(undefined); // todo signal
 
   public hueSliderColor: string | undefined;
   public alphaSliderColor: string | undefined;
@@ -57,13 +55,12 @@ export class ColorPickerComponent
   readonly alphaSlider = viewChild<ElementRef>("alphaSlider");
 
   readonly service = inject(ConverterService);
-  readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     if (!this.color()) {
       this.setColor(new Hsva(0, 1, 1, 1));
     }
-    this.slider = new SliderPosition(0, 0, 0, 0);
+    this.slider.set(new SliderPosition(0, 0, 0, 0));
     this.update();
   }
 
@@ -115,8 +112,7 @@ export class ColorPickerComponent
 
   public getBackgroundColor(color: string) {
     return {
-      background:
-        "linear-gradient(90deg, rgba(36,0,0,0) 0%, " + color + " 100%)",
+      background: `linear-gradient(90deg, rgba(36,0,0,0) 0%, ${color} 100%)`,
     };
   }
 
@@ -132,21 +128,20 @@ export class ColorPickerComponent
         .hsvaToRgba(new Hsva(this.hsva.h, 1, 1, 1))
         .denormalize();
 
-      this.hueSliderColor = "rgb(" + hue.r + "," + hue.g + "," + hue.b + ")";
-      this.alphaSliderColor =
-        "rgb(" + rgba.r + "," + rgba.g + "," + rgba.b + ")";
+      this.hueSliderColor = `rgb(${hue.r},${hue.g},${hue.b})`;
+      this.alphaSliderColor = `rgb(${rgba.r},${rgba.g},${rgba.b})`;
 
       this.outputColor = this.hsva;
       this.selectedColor.set(this.service.hsvaToRgba(this.hsva).toString());
 
-      this.slider = new SliderPosition(
-        // (this.sHue || this.hsva.h) * this.sliderDimMax.h - 8,
-        horizontalPosition(this.hsva.h, this.sliderDimMax.h, 5),
-        horizontalPosition(this.hsva.s, this.sliderDimMax.s, 8),
-        (1 - this.hsva.v) * this.sliderDimMax.v - 8,
-        horizontalPosition(this.hsva.a, this.sliderDimMax.a, 5),
+      this.slider.set(
+        new SliderPosition(
+          horizontalPosition(this.hsva.h, this.sliderDimMax.h, 5),
+          horizontalPosition(this.hsva.s, this.sliderDimMax.s, 8),
+          (1 - this.hsva.v) * this.sliderDimMax.v - 8,
+          horizontalPosition(this.hsva.a, this.sliderDimMax.a, 5),
+        ),
       );
-      this.cdr.detectChanges();
     }
   }
 }
