@@ -418,6 +418,19 @@
     ]
   },
   {
+    "version": "4.0.0",
+    "changelog": [
+      {
+        "type": "feature",
+        "details": "add Angular 20 support"
+      },
+      {
+        "type": "breaking",
+        "details": "remove animations"
+      }
+    ]
+  },
+  {
     "version": "x.x.x",
     "changelog": [
       {

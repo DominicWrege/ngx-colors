@@ -4,7 +4,7 @@ ngx-colors2 is a fork of [KroneCorylus/ngx-colors](https://github.com/KroneCoryl
 
 ## Main Fork Changes
 
-- Angular 20 ready
+- Angular 20+ ready
 - signals usage
 - No animations required (does not depend on `@angular/animations`)
 
@@ -34,7 +34,21 @@ http://localhost:4200
 npm install ngx-colors2
 ```
 
-#### Standalone support just import the component and direct
+#### Module Support
+
+```javascript
+import { NgxColorsModule } from "ngx-colors2";
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    NgxColorsModule
+  ]
+})
+```
+
+#### Standalone Support
 
 ```ts
 import { NgxColorsTriggerDirective, NgxColorsComponent } from "ngx-colors2";
@@ -48,20 +62,6 @@ import { FormsModule } from "@angular/forms";
 export class AppExample {
   // ...
 }
-```
-
-##### Load the ngx-colors module in your app module:
-
-```javascript
-import { NgxColorsModule } from "ngx-colors2";
-
-@NgModule({
-  ...
-  imports: [
-    ...
-    NgxColorsModule
-  ]
-})
 ```
 
 ## Overview and usage

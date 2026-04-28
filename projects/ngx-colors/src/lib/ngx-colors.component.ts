@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OutputRefSubscription,
   inject,
+  effect,
 } from "@angular/core";
 import { NgxColorsTriggerDirective } from "./directives/ngx-colors-trigger.directive";
 import { NgStyle } from "@angular/common";

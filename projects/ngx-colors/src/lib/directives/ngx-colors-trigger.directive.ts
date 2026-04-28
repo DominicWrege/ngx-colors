@@ -16,7 +16,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { NgxColorsColor } from "../clases/color";
 import { ConverterService } from "../services/converter.service";
 import { formats } from "../helpers/formats";
-import { ColorFormats } from "../enums/formats";
 import { Direction } from "../types/direction";
 
 @Directive({
@@ -32,14 +31,13 @@ import { Direction } from "../types/direction";
 export class NgxColorsTriggerDirective
   implements ControlValueAccessor, OnDestroy
 {
-  //Main input/output of the color picker
-  // @Input() color = '#000000';
-  // @Output() colorChange:EventEmitter<string> = new EventEmitter<string>();
-
   readonly color = signal("");
 
-  //This is used to set a custom palette of colors in the panel;
-  readonly palette = input<Array<string> | Array<NgxColorsColor>>([]);
+  // This is used to set a custom palette of colors in the panel.
+  // Keep it undefined by default so the panel can use its built-in default palette.
+  readonly palette = input<Array<string> | Array<NgxColorsColor> | undefined>(
+    undefined,
+  );
 
   readonly dir = input<Direction>("ltr");
   readonly format = input<string>("");
@@ -120,9 +118,17 @@ export class NgxColorsTriggerDirective
   }
 
   public setColor(color: string, previewColor = "") {
-    this.writeValue(color, previewColor);
-    this.onChangeCallback(color);
-    this.input.emit(color);
+    this.writeValue(color);
+    const currentColor = this.color();
+    this.onChangeCallback(currentColor);
+
+    const outputColor =
+      currentColor.startsWith("cmyk") && previewColor
+        ? previewColor
+        : currentColor;
+
+    this.change.emit(outputColor);
+    this.input.emit(currentColor);
   }
 
   public sliderChange(color: string) {
@@ -135,10 +141,9 @@ export class NgxColorsTriggerDirective
 
   set value(value: string) {
     this.setColor(value);
-    this.onChangeCallback(value);
   }
 
-  writeValue(value: string | undefined, previewColor = "") {
+  writeValue(value: string | undefined) {
     if (value !== this.color()) {
       const format = this.format();
       if (format) {
@@ -146,17 +151,6 @@ export class NgxColorsTriggerDirective
         value = this.service.stringToFormat(value ?? "", localFormat);
       }
       this.color.set(value ?? "");
-
-      let isCmyk = false;
-      if (value && value.startsWith("cmyk")) {
-        isCmyk = true;
-        if (!previewColor) {
-          previewColor =
-            this.service.stringToFormat(value, ColorFormats.RGBA) ?? "";
-        }
-      }
-
-      this.change.emit(isCmyk ? previewColor : (value ?? ""));
     }
   }
 
