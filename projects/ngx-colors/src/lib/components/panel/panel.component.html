@@ -9,7 +9,7 @@
             [class.colornull]="!color"
             [ngStyle]="getBackgroundColor(color)"
           >
-            @if (i == this.indexSeleccionado) {
+            @if (i == this.indexSeleccionado()) {
               <div class="selected"></div>
             }
           </div>
@@ -22,7 +22,7 @@
           (click)="addColor()"
           class="circle button"
         >
-          @if (this.indexSeleccionado === undefined) {
+          @if (this.indexSeleccionado() === undefined) {
             <div
               style="
                 position: absolute;
@@ -154,8 +154,8 @@
           [placeholder]="placeholder()"
           type="text"
           [value]="color()"
-          [style.font-size.px]="color && color.length > 23 ? 9 : 10"
-          [style.letter-spacing.px]="color && color.length > 16 ? 0 : 1.5"
+          [style.font-size.px]="color()?.length > 23 ? 9 : 10"
+          [style.letter-spacing.px]="color()?.length > 16 ? 0 : 1.5"
           (keyup)="changeColorManual(paintInput.value)"
           (keydown.enter)="emitClose('accept')"
           #paintInput

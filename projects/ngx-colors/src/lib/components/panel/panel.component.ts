@@ -18,9 +18,11 @@ import { defaultColors } from "../../helpers/default-colors";
 import { formats } from "../../helpers/formats";
 import { NgxColorsTriggerDirective } from "../../directives/ngx-colors-trigger.directive";
 import { Hsva } from "../../clases/formats";
-import { NgxColorsColor } from "../../clases/color";
 import { NgStyle } from "@angular/common";
-import { ColorPickerComponent } from "../color-picker/color-picker.component";
+import {
+  ColorPickerComponent,
+  NgxColorsColor,
+} from "../color-picker/color-picker.component";
 
 type PanelInitiateOptions = {
   triggerInstance: NgxColorsTriggerDirective;
@@ -43,31 +45,28 @@ type PanelInitiateOptions = {
   templateUrl: "./panel.component.html",
   styleUrls: ["./panel.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    "[style.top.px]": "top()",
+    "[style.left.px]": "left()",
+    "(window:resize)": "onScreenMovement()",
+    "(document:scroll)": "onScreenMovement()",
+    "(document:mousedown)": "click($event)",
+  },
   imports: [NgStyle, ColorPickerComponent],
 })
 export class PanelComponent implements OnInit {
-  @HostListener("document:mousedown", ["$event"])
   click(event: Event) {
     if (this.isOutside(event)) {
       this.emitClose("cancel");
     }
   }
 
-  @HostListener("document:scroll")
-  onScroll() {
-    this.onScreenMovement();
-  }
-  @HostListener("window:resize")
-  onResize() {
-    this.onScreenMovement();
-  }
+  public top = signal(0);
+  public left = signal(0);
 
-  @HostBinding("style.top.px") public top: number = 0;
-  @HostBinding("style.left.px") public left: number = 0;
   readonly panelRef = viewChild<ElementRef>("dialog");
 
   readonly service = inject(ConverterService);
-  readonly cdr = inject(ChangeDetectorRef);
 
   public color = signal("#000000");
   public previewColor: string | undefined = "#000000";
@@ -101,7 +100,7 @@ export class PanelComponent implements OnInit {
   private triggerInstance!: NgxColorsTriggerDirective;
   private TriggerBBox: ElementRef | undefined;
   public isSelectedColorInPalette = false;
-  public indexSeleccionado: number | undefined = 0;
+  public indexSeleccionado = signal<number | undefined>(0);
   public positionString = signal("");
   public temporalColor: Hsva | undefined;
   public backupColor = signal("#FFFFFF");
@@ -114,13 +113,13 @@ export class PanelComponent implements OnInit {
       this.hsva.set(newColor);
     }
 
-    this.indexSeleccionado = this.findIndexSelectedColor(this.palette());
+    this.indexSeleccionado.set(this.findIndexSelectedColor(this.palette()));
   }
   public ngAfterViewInit() {
     this.setPositionY();
   }
 
-  private onScreenMovement() {
+  public onScreenMovement() {
     this.setPosition();
     this.setPositionY();
     const panelRef = this.panelRef();
@@ -131,26 +130,21 @@ export class PanelComponent implements OnInit {
 
   private findIndexSelectedColor(
     colors: Array<string | NgxColorsColor>,
-  ): number | undefined {
-    let resultIndex: number | undefined;
-    if (!this.color) {
-      return resultIndex;
-    }
-    for (let i = 0; i < colors.length; i++) {
-      const color = colors[i];
-      if (typeof color == "string") {
-        if (
-          this.service.stringToFormat(this.color() ?? "", ColorFormats.HEX) ==
-          this.service.stringToFormat(color, ColorFormats.HEX)
-        ) {
-          resultIndex = i;
-        }
-      } else {
-        if (this.findIndexSelectedColor(color.variants) !== undefined) {
-          resultIndex = i;
-        }
+  ): number {
+    const current = this.color();
+    if (!current) return -1;
+
+    const currentHex = this.service.stringToFormat(current, ColorFormats.HEX);
+
+    return colors.findIndex((color) => {
+      if (typeof color === "string") {
+        return (
+          currentHex === this.service.stringToFormat(color, ColorFormats.HEX)
+        );
       }
-    }
+
+      return this.findIndexSelectedColor(color.variants) !== -1;
+    });
   }
 
   public iniciate({
@@ -228,25 +222,27 @@ export class PanelComponent implements OnInit {
       const viewportOffset =
         this.TriggerBBox.nativeElement.getBoundingClientRect();
 
-      this.top = viewportOffset.top + viewportOffset.height;
+      this.top.set(viewportOffset.top + viewportOffset.height);
 
       if (isDocumentRTL) {
         if (viewportOffset.left + panelWidth > window.innerWidth) {
-          this.left =
+          this.left.set(
             viewportOffset.left < panelWidth
               ? window.innerWidth / 2 + panelWidth / 2
-              : viewportOffset.left + panelWidth;
+              : viewportOffset.left + panelWidth,
+          );
         } else {
-          this.left = viewportOffset.left + panelWidth;
+          this.left.set(viewportOffset.left + panelWidth);
         }
       } else {
         if (viewportOffset.left + panelWidth > window.innerWidth) {
-          this.left =
+          this.left.set(
             viewportOffset.right < panelWidth
               ? window.innerWidth / 2 - panelWidth / 2
-              : viewportOffset.right - panelWidth;
+              : viewportOffset.right - panelWidth,
+          );
         } else {
-          this.left = viewportOffset.left;
+          this.left.set(viewportOffset.left);
         }
       }
     }
@@ -278,7 +274,6 @@ export class PanelComponent implements OnInit {
     } else {
       this.positionString.set("");
     }
-    this.cdr.detectChanges();
   }
 
   public hasVariant(color: string | NgxColorsColor): boolean {
@@ -322,32 +317,29 @@ export class PanelComponent implements OnInit {
     const alphaPayload =
       typeof alpha === "number" ? { v: alpha, rgX: 1 } : alpha;
 
-    const result: Array<string | NgxColorsColor> = [];
-    for (let i = 0; i < colors.length; i++) {
-      const color = colors[i];
-      if (typeof color == "string") {
-        const newColor = this.service.stringToHsva(color);
-        if (!newColor) {
-          continue;
+    return colors
+      .map((color) => {
+        if (typeof color === "string") {
+          const newColor = this.service.stringToHsva(color);
+          if (!newColor) return null;
+
+          newColor.onAlphaChange(alphaPayload);
+          return this.service.toFormat(newColor, this.format);
         }
-        newColor.onAlphaChange(alphaPayload);
-        result.push(this.service.toFormat(newColor, this.format));
-      } else {
-        const newColor = new NgxColorsColor();
+
         const newColorPreview = this.service.stringToHsva(color.preview);
-        if (!newColorPreview) {
-          continue;
-        }
+        if (!newColorPreview) return null;
+
         newColorPreview.onAlphaChange(alphaPayload);
-        newColor.preview = this.service.toFormat(newColorPreview, this.format);
-        newColor.variants = this.ChangeAlphaOnPalette(
-          alphaPayload,
-          color.variants,
-        ).filter((item): item is string => typeof item === "string");
-        result.push(newColor);
-      }
-    }
-    return result;
+        return {
+          preview: this.service.toFormat(newColorPreview, this.format),
+          variants: this.ChangeAlphaOnPalette(
+            alphaPayload,
+            color.variants,
+          ).filter((item): item is string => typeof item === "string"),
+        } satisfies NgxColorsColor;
+      })
+      .filter((item): item is string | NgxColorsColor => item !== null);
   }
 
   /**
@@ -459,7 +451,7 @@ export class PanelComponent implements OnInit {
         this.hsva.set(parsedColor);
       }
     }
-    this.indexSeleccionado = this.findIndexSelectedColor(this.palette());
+    this.indexSeleccionado.set(this.findIndexSelectedColor(this.palette()));
     this.menu.set(1);
   }
 

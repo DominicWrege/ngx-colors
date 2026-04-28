@@ -13,10 +13,10 @@ import {
 import { PanelFactoryService } from "../services/panel-factory.service";
 import { PanelComponent } from "../components/panel/panel.component";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { NgxColorsColor } from "../clases/color";
 import { ConverterService } from "../services/converter.service";
 import { formats } from "../helpers/formats";
 import { Direction } from "../types/direction";
+import { NgxColorsColor } from "../components/color-picker/color-picker.component";
 
 @Directive({
   selector: "[ngx-colors-trigger]",
@@ -35,9 +35,7 @@ export class NgxColorsTriggerDirective
 
   // This is used to set a custom palette of colors in the panel.
   // Keep it undefined by default so the panel can use its built-in default palette.
-  readonly palette = input<Array<string> | Array<NgxColorsColor> | undefined>(
-    undefined,
-  );
+  readonly palette = input<string[] | NgxColorsColor[] | undefined>(undefined);
 
   readonly dir = input<Direction>("ltr");
   readonly format = input<string>("");

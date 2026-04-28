@@ -19,6 +19,11 @@ import { SliderDirective } from "../../directives/slider.directive";
 import { NgStyle } from "@angular/common";
 import { Hsva } from "../../clases/formats";
 
+export interface NgxColorsColor {
+  preview: string;
+  variants: string[];
+}
+
 export interface SliderPosition {
   hue: number;
   saturation: number;
@@ -60,8 +65,8 @@ export class ColorPickerComponent
   private sliderDimMax: SliderDimension | undefined;
   public slider = signal<SliderPosition | undefined>(undefined); // todo signal
 
-  public hueSliderColor: string | undefined;
-  public alphaSliderColor: string | undefined;
+  public hueSliderColor = signal<string | undefined>(undefined);
+  public alphaSliderColor = signal<string | undefined>(undefined);
 
   readonly hueSlider = viewChild<ElementRef>("hueSlider");
   readonly alphaSlider = viewChild<ElementRef>("alphaSlider");
@@ -79,6 +84,7 @@ export class ColorPickerComponent
   ngOnDestroy(): void {}
 
   ngOnChanges(changes: any): void {
+
     if (changes.color && this.color()) {
       this.update();
     }
@@ -145,8 +151,8 @@ export class ColorPickerComponent
         .hsvaToRgba(new Hsva(this.hsva.h, 1, 1, 1))
         .denormalize();
 
-      this.hueSliderColor = `rgb(${hue.r},${hue.g},${hue.b})`;
-      this.alphaSliderColor = `rgb(${rgba.r},${rgba.g},${rgba.b})`;
+      this.hueSliderColor.set(`rgb(${hue.r},${hue.g},${hue.b})`);
+      this.alphaSliderColor.set(`rgb(${rgba.r},${rgba.g},${rgba.b})`);
 
       this.outputColor = this.hsva;
       this.selectedColor.set(this.service.hsvaToRgba(this.hsva).toString());
