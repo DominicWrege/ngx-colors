@@ -1,6 +1,6 @@
 {
   "name": "ngx-colors2",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host localhost",
@@ -9,7 +9,7 @@
     "build-lib": "ng build --configuration production ngx-colors",
     "npm-pack": "cd dist/ngx-colors && npm pack",
     "package": "pnpm run build-lib && npm run npm-pack",
-    "publishLib": "pnpm package && cp -f README.md dist/ngx-colors && cp -f README.md projects/ngx-colors && cd dist/ngx-colors && npm publish --tag next"
+    "publishLib": "pnpm package && cp -f README.md dist/ngx-colors && cp -f README.md projects/ngx-colors && cd dist/ngx-colors && npm publish"
   },
   "private": false,
   "dependencies": {
