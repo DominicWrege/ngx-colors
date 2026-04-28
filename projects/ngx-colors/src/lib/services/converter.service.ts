@@ -6,9 +6,6 @@ import { ColorFormats } from "../enums/formats";
 
 @Injectable()
 export class ConverterService {
-  // private active: ColorPickerComponent | null = null;
-
-  constructor() {}
 
   // public setActive(active: ColorPickerComponent | null): void {
   //   this.active = active;

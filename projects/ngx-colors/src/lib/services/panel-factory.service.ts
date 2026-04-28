@@ -1,15 +1,12 @@
 import {
   Injectable,
-  ComponentFactoryResolver,
   Injector,
-  Inject,
-  TemplateRef,
-  Type,
-  ComponentFactory,
   ApplicationRef,
   EmbeddedViewRef,
   ComponentRef,
-  DOCUMENT
+  createComponent,
+  EnvironmentInjector,
+  inject,
 } from "@angular/core";
 
 import { PanelComponent } from "../components/panel/panel.component";
@@ -17,27 +14,24 @@ import { OVERLAY_STYLES } from "./overlay-styles";
 
 @Injectable()
 export class PanelFactoryService {
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private applicationRef: ApplicationRef,
-    private injector: Injector
-  ) {}
+  private readonly applicationRef = inject(ApplicationRef);
+  private readonly injector = inject(Injector);
+  private readonly environmentInjector = inject(EnvironmentInjector);
 
-  componentRef: ComponentRef<PanelComponent>;
-  _factory: ComponentFactory<PanelComponent>;
-  overlay;
+  componentRef!: ComponentRef<PanelComponent>;
+  overlay!: HTMLDivElement;
 
   createPanel(
     attachTo: string | undefined,
-    overlayClassName: string | undefined
+    overlayClassName: string | undefined,
   ): ComponentRef<PanelComponent> {
     if (this.componentRef != undefined) {
       this.removePanel();
     }
-    const factory: ComponentFactory<PanelComponent> =
-      this.resolver.resolveComponentFactory(PanelComponent);
-
-    this.componentRef = factory.create(this.injector);
+    this.componentRef = createComponent(PanelComponent, {
+      environmentInjector: this.environmentInjector,
+      elementInjector: this.injector,
+    });
     this.applicationRef.attachView(this.componentRef.hostView);
     const domElem = (this.componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
@@ -45,12 +39,22 @@ export class PanelFactoryService {
     this.overlay = document.createElement("div");
     this.overlay.id = "ngx-colors-overlay";
     this.overlay.classList.add("ngx-colors-overlay");
-    this.overlay.classList.add(overlayClassName);
-    Object.keys(OVERLAY_STYLES).forEach((attr: string) => {
-      this.overlay.style[attr] = OVERLAY_STYLES[attr];
+    if (overlayClassName) {
+      this.overlay.classList.add(overlayClassName);
+    }
+    Object.keys(OVERLAY_STYLES).forEach((attr) => {
+      this.overlay.style.setProperty(
+        attr,
+        String(OVERLAY_STYLES[attr as keyof typeof OVERLAY_STYLES]),
+      );
     });
     if (attachTo) {
-      document.getElementById(attachTo).appendChild(this.overlay);
+      const attachElement = document.getElementById(attachTo);
+      if (attachElement) {
+        attachElement.appendChild(this.overlay);
+      } else {
+        document.body.appendChild(this.overlay);
+      }
     } else {
       document.body.appendChild(this.overlay);
     }

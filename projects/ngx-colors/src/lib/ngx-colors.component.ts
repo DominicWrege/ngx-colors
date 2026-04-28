@@ -10,12 +10,15 @@ import {
 } from "@angular/core";
 import { NgxColorsTriggerDirective } from "./directives/ngx-colors-trigger.directive";
 import { NgStyle } from "@angular/common";
+import { ConverterService } from "./services/converter.service";
+import { PanelFactoryService } from "./services/panel-factory.service";
 
 @Component({
   selector: "ngx-colors",
   templateUrl: "./ngx-colors.component.html",
   styleUrls: ["./ngx-colors.component.scss"],
   imports: [NgStyle],
+  providers: [ConverterService, PanelFactoryService],
 })
 export class NgxColorsComponent implements OnInit, OnDestroy {
   private triggerDirectiveColorChangeSubscription: OutputRefSubscription | null =
