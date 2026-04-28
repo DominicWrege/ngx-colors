@@ -12,6 +12,7 @@ import {
   model,
   signal,
   ChangeDetectionStrategy,
+  inject,
 } from "@angular/core";
 
 import { SliderDimension, SliderPosition } from "../../clases/slider";
@@ -37,6 +38,7 @@ export class ColorPickerComponent
   readonly dir = input<"ltr" | "rtl">("ltr");
   readonly sliderChange = output<Hsva>();
   readonly onAlphaChange = output<any>();
+
   //Event triggered when any slider change
   // @Output() colorSelectedChange:EventEmitter<Hsva> = new EventEmitter<Hsva>(false);
 
@@ -46,7 +48,7 @@ export class ColorPickerComponent
 
   // private sHue: number;
   private sliderDimMax: SliderDimension | undefined;
-  public slider: SliderPosition | undefined;
+  public slider: SliderPosition | undefined; // todo signal
 
   public hueSliderColor: string | undefined;
   public alphaSliderColor: string | undefined;
@@ -54,13 +56,11 @@ export class ColorPickerComponent
   readonly hueSlider = viewChild<ElementRef>("hueSlider");
   readonly alphaSlider = viewChild<ElementRef>("alphaSlider");
 
-  constructor(
-    private service: ConverterService,
-    private cdr: ChangeDetectorRef,
-  ) {}
+  readonly service = inject(ConverterService);
+  readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    if (!this.color) {
+    if (!this.color()) {
       this.setColor(new Hsva(0, 1, 1, 1));
     }
     this.slider = new SliderPosition(0, 0, 0, 0);

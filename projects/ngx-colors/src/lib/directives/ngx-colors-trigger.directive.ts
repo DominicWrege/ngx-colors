@@ -8,6 +8,7 @@ import {
   input,
   output,
   signal,
+  inject,
 } from "@angular/core";
 import { PanelFactoryService } from "../services/panel-factory.service";
 import { PanelComponent } from "../components/panel/panel.component";
@@ -37,9 +38,6 @@ export class NgxColorsTriggerDirective
 
   readonly color = signal("");
 
-  //This defines the type of animation for the palatte.(slide-in | popup)
-  readonly colorsAnimation = input<"slide-in" | "popup">("slide-in");
-
   //This is used to set a custom palette of colors in the panel;
   readonly palette = input<Array<string> | Array<NgxColorsColor>>([]);
 
@@ -68,11 +66,10 @@ export class NgxColorsTriggerDirective
   @HostListener("click") onClick() {
     this.openPanel();
   }
-  constructor(
-    private triggerRef: ElementRef,
-    private panelFactory: PanelFactoryService,
-    private service: ConverterService,
-  ) {}
+
+  readonly triggerRef = inject(ElementRef);
+  readonly panelFactory = inject(PanelFactoryService);
+  readonly service = inject(ConverterService);
 
   panelRef: ComponentRef<PanelComponent> | undefined;
   isDisabled: boolean = false;
@@ -92,22 +89,21 @@ export class NgxColorsTriggerDirective
         this.attachTo(),
         this.overlayClassName(),
       );
-      this.panelRef.instance.iniciate(
-        this,
-        this.triggerRef,
-        this.color(),
-        this.palette(),
-        this.colorsAnimation(),
-        this.format(),
-        this.hideTextInput(),
-        this.hideColorPicker(),
-        this.acceptLabel(),
-        this.cancelLabel(),
-        this.colorPickerControls(),
-        this.position(),
-        this.formats(),
-        this.dir(),
-      );
+      this.panelRef.instance.iniciate({
+        triggerInstance: this,
+        triggerElementRef: this.triggerRef,
+        color: this.color(),
+        palette: this.palette(),
+        format: this.format(),
+        hideTextInput: this.hideTextInput(),
+        hideColorPicker: this.hideColorPicker(),
+        acceptLabel: this.acceptLabel(),
+        cancelLabel: this.cancelLabel(),
+        colorPickerControls: this.colorPickerControls(),
+        position: this.position(),
+        userFormats: this.formats(),
+        dir: this.dir(),
+      });
     }
     this.open.emit(this.color());
   }
@@ -155,11 +151,12 @@ export class NgxColorsTriggerDirective
       if (value && value.startsWith("cmyk")) {
         isCmyk = true;
         if (!previewColor) {
-          previewColor = this.service.stringToFormat(value, ColorFormats.RGBA);
+          previewColor =
+            this.service.stringToFormat(value, ColorFormats.RGBA) ?? "";
         }
       }
 
-      this.change.emit(isCmyk ? previewColor : value);
+      this.change.emit(isCmyk ? previewColor : (value ?? ""));
     }
   }
 

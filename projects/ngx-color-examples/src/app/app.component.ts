@@ -1,5 +1,11 @@
-import { Component, OnInit, ElementRef, viewChild } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  viewChild,
+  inject,
+} from "@angular/core";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { examples } from "./const/examples";
 import { snippets } from "./const/snippets";
@@ -23,16 +29,14 @@ export class AppComponent implements OnInit {
   title = "ngx-color-examples";
   rightColor = "#42A5F5";
   leftColor = "#C0CA33";
-  gradient;
+  gradient: SafeStyle | undefined;
+
+  public domSanitizer = inject(DomSanitizer);
+  public http = inject(HttpClient);
+  private contexts = inject(ChildrenOutletContexts);
+  private router = inject(Router);
 
   readonly menuView = viewChild<ElementRef>("tabmenu");
-
-  constructor(
-    public domSanitizer: DomSanitizer,
-    public http: HttpClient,
-    private contexts: ChildrenOutletContexts,
-    private router: Router,
-  ) {}
 
   getRouteAnimationData() {
     return this.contexts.getContext("primary")?.route?.snapshot?.data?.[
@@ -46,7 +50,7 @@ export class AppComponent implements OnInit {
     { text: "EXAMPLES", url: "/examples" },
     { text: "CHANGELOG", url: "/changelog" },
   ];
-  activeLink = undefined;
+  activeLink: string | undefined = undefined;
 
   testForm = new UntypedFormGroup({
     testCtrl: new UntypedFormControl(""),
@@ -77,7 +81,7 @@ export class AppComponent implements OnInit {
   colorFormControl = new UntypedFormControl("#c2185b");
 
   navbar = false;
-  versions: Array<any>;
+  versions: any[] = [];
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
@@ -97,7 +101,7 @@ export class AppComponent implements OnInit {
     this.rightColor = this.colors[index];
   }
 
-  randomInt(min, max) {
+  randomInt(min: number, max: number) {
     return min + Math.floor((max - min) * Math.random());
   }
 
@@ -112,10 +116,10 @@ export class AppComponent implements OnInit {
   }
 
   scrollIntoView() {
-    this.menuView().nativeElement.scrollIntoView({ behavior: "smooth" });
+    this.menuView()?.nativeElement.scrollIntoView({ behavior: "smooth" });
   }
 
-  log(event) {
+  log(event: string) {
     console.log(event);
   }
 }

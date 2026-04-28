@@ -21,6 +21,22 @@ import { NgxColorsColor } from "../../clases/color";
 import { NgStyle } from "@angular/common";
 import { ColorPickerComponent } from "../color-picker/color-picker.component";
 
+type PanelInitiateOptions = {
+  triggerInstance: NgxColorsTriggerDirective;
+  triggerElementRef: ElementRef;
+  color: string;
+  palette: Array<string | NgxColorsColor> | undefined;
+  format: string;
+  hideTextInput: boolean;
+  hideColorPicker: boolean;
+  acceptLabel: string;
+  cancelLabel: string;
+  colorPickerControls: "default" | "only-alpha" | "no-alpha";
+  position: "top" | "bottom";
+  userFormats?: string[];
+  dir?: "ltr" | "rtl";
+};
+
 @Component({
   selector: "ngx-colors-panel",
   templateUrl: "./panel.component.html",
@@ -55,8 +71,6 @@ export class PanelComponent implements OnInit {
   public color = signal("#000000");
   public previewColor: string | undefined = "#000000";
   public hsva = signal(new Hsva(0, 1, 1, 1));
-
-  public colorsAnimationEffect = "slide-in";
 
   public palette = signal<(string | NgxColorsColor)[]>(defaultColors);
   public variants = signal<string[]>([]);
@@ -136,22 +150,21 @@ export class PanelComponent implements OnInit {
     }
   }
 
-  public iniciate(
-    triggerInstance: NgxColorsTriggerDirective,
-    triggerElementRef: ElementRef,
-    color: string,
-    palette: Array<string | NgxColorsColor> | undefined,
-    animation: "slide-in" | "popup",
-    format: string,
-    hideTextInput: boolean,
-    hideColorPicker: boolean,
-    acceptLabel: string,
-    cancelLabel: string,
-    colorPickerControls: "default" | "only-alpha" | "no-alpha",
-    position: "top" | "bottom",
-    userFormats: string[] = [],
-    dir: "ltr" | "rtl" = "ltr",
-  ) {
+  public iniciate({
+    triggerInstance,
+    triggerElementRef,
+    color,
+    palette,
+    format,
+    hideTextInput,
+    hideColorPicker,
+    acceptLabel,
+    cancelLabel,
+    colorPickerControls,
+    position,
+    userFormats = [],
+    dir = "ltr",
+  }: PanelInitiateOptions) {
     this.colorPickerControls = colorPickerControls;
     this.triggerInstance = triggerInstance;
     this.TriggerBBox = triggerElementRef;
@@ -196,7 +209,6 @@ export class PanelComponent implements OnInit {
 
     this.previewColor = this.color();
     this.palette.set(palette ?? defaultColors);
-    this.colorsAnimationEffect = animation;
     this.dir.set(dir);
     if (position == "top") {
       let TriggerBBox = this.TriggerBBox.nativeElement.getBoundingClientRect();

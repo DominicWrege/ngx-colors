@@ -1,15 +1,14 @@
-![size](https://img.shields.io/bundlephobia/min/ngx-colors?style=for-the-badge)
-![download](https://img.shields.io/npm/dm/ngx-colors?style=for-the-badge)
+# ngx-colors2
 
-<p align="center">
-  <h1 align="center">ngx-colors</h1>
-  <p align="center">ngx-colors is a colorpicker component of angular with a material design style, allows users to select a color via text input (hexadecimal, rgba, hsla), choosing a preset color from the palette, or a color picker using the Hue, Lightness, and Alpha sliders.
-  </p>
-</p>
+ngx-colors2 is a fork of [KroneCorylus/ngx-colors](https://github.com/KroneCorylus/ngx-colors). It is a colorpicker component for Angular with a material design style, allowing users to select a color via text input (hexadecimal, rgba, hsla), choose a preset color from the palette, or use a color picker with Hue, Lightness, and Alpha sliders.
 
 ## Demo and documentation
 
-https://ngx-colors.web.app/
+```sh
+pnpm start
+```
+
+http://localhost:4200
 
 ## Preview
 
@@ -21,23 +20,34 @@ https://ngx-colors.web.app/
 
 | Angular | Latest ngx-colors compatible |
 | ------- | ---------------------------- |
-| 15      | Latest                       |
-| 14      | 3.1.4                        |
-| 13      | 3.1.4                        |
-| 12      | 3.0.5                        |
-| 11      | 3.0.5                        |
-| 10      | 3.0.5                        |
+| >=20    | 4.x                          |
 
 #### Npm
 
 ```shell
-npm install ngx-colors
+npm install ngx-colors2
+```
+
+#### Standalone support just import the component and direct
+
+```ts
+import { NgxColorsTriggerDirective, NgxColorsComponent } from "ngx-colors2";
+import { FormsModule } from "@angular/forms";
+
+@Component({
+  selector: "app-example",
+  templateUrl: "./app-example.html",
+  imports: [NgxColorsTriggerDirective, NgxColorsComponent, FormsModule],
+})
+export class AppExample {
+  // ...
+}
 ```
 
 ##### Load the ngx-colors module in your app module:
 
 ```javascript
-import { NgxColorsModule } from 'ngx-colors';
+import { NgxColorsModule } from "ngx-colors2";
 
 @NgModule({
   ...
@@ -58,40 +68,25 @@ This library is composed of two parts:
 ##### Use it in your HTML template with ngModel:
 
 ```html
-<ngx-colors 
-  ngx-colors-trigger 
-  [(ngModel)]="color"
-></ngx-colors>
+<ngx-colors ngx-colors-trigger [(ngModel)]="color"></ngx-colors>
 ```
 
 You can select just one format:
 
 ```html
-<ngx-colors 
-  ngx-colors-trigger 
-  [(ngModel)]="color"
-  [format] = "'hex'"
-></ngx-colors>
+<ngx-colors ngx-colors-trigger [(ngModel)]="color" [format]="'hex'"></ngx-colors>
 ```
 
 Or you can choise some formats
 
 ```html
-<ngx-colors 
-  ngx-colors-trigger 
-  [(ngModel)]="color"
-  [formats]="['hex','cmyk']"
-></ngx-colors>
+<ngx-colors ngx-colors-trigger [(ngModel)]="color" [formats]="['hex','cmyk']"></ngx-colors>
 ```
 
 ##### Or with Reactive Forms:
 
 ```html
 <form class="example-form">
-  <ngx-colors
-    ngx-colors-trigger
-    style="display: inline-block; margin:5px;"
-    [formControl]="colorFormControl"
-  ></ngx-colors>
+  <ngx-colors ngx-colors-trigger style="display: inline-block; margin:5px;" [formControl]="colorFormControl"></ngx-colors>
 </form>
 ```
