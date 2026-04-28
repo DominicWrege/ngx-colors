@@ -7,7 +7,6 @@ ngx-colors2 is a fork of [KroneCorylus/ngx-colors](https://github.com/KroneCoryl
 - Angular 20+ ready
 - signals usage
 - No animations required (does not depend on `@angular/animations`)
-- Up-to-date `ngx-highlightjs` support
 
 ## Demo and documentation
 
