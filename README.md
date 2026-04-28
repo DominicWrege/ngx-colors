@@ -1,6 +1,12 @@
 # ngx-colors2
 
-ngx-colors2 is a fork of [KroneCorylus/ngx-colors](https://github.com/KroneCorylus/ngx-colors). It is a colorpicker component for Angular with a material design style, allowing users to select a color via text input (hexadecimal, rgba, hsla), choose a preset color from the palette, or use a color picker with Hue, Lightness, and Alpha sliders.
+ngx-colors2 is a fork of [KroneCorylus/ngx-colors](https://github.com/KroneCorylus/ngx-colors). It is a colorpicker component for Angular with a material kind of design style, allowing users to select a color via text input (hexadecimal, rgba, hsla), choose a preset color from the palette, or use a color picker with Hue, Lightness, and Alpha sliders.
+
+## Main Fork Changes
+
+- Angular 20 ready
+- signals usage
+- No animations required (does not depend on `@angular/animations`)
 
 ## Demo and documentation
 
