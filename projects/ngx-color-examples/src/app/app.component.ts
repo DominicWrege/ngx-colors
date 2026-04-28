@@ -4,8 +4,8 @@ import {
   ElementRef,
   viewChild,
   inject,
+  signal,
 } from "@angular/core";
-import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { examples } from "./const/examples";
 import { snippets } from "./const/snippets";
@@ -22,16 +22,18 @@ import {
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
-
+  host: {
+    "[style.background]": "gradient()",
+    "[style.display]": "'block'",
+  },
   standalone: false,
 })
 export class AppComponent implements OnInit {
   title = "ngx-color-examples";
   rightColor = "#42A5F5";
   leftColor = "#C0CA33";
-  gradient: SafeStyle | undefined;
+  gradient = signal("");
 
-  public domSanitizer = inject(DomSanitizer);
   public http = inject(HttpClient);
   private contexts = inject(ChildrenOutletContexts);
   private router = inject(Router);
@@ -106,12 +108,8 @@ export class AppComponent implements OnInit {
   }
 
   updateGradient() {
-    this.gradient = this.domSanitizer.bypassSecurityTrustStyle(
-      "linear-gradient(45deg, " +
-        this.leftColor +
-        " 0%," +
-        this.rightColor +
-        " 100%)",
+    this.gradient.set(
+      `linear-gradient(45deg, ${this.leftColor} 0%, ${this.rightColor} 100%)`,
     );
   }
 
