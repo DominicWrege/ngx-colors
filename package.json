@@ -9,7 +9,7 @@
     "build-lib": "ng build --configuration production ngx-colors",
     "npm-pack": "cd dist/ngx-colors && npm pack",
     "package": "npm run build-lib && npm run npm-pack",
-    "publishLib": "cp -f README.md dist/ngx-colors && cp -f README.md projects/ngx-colors && cd dist/ngx-colors && npm publish"
+    "publishLib": "cp -f README.md dist/ngx-colors && cp -f README.md projects/ngx-colors && cd dist/ngx-colors && npm publish --tag next"
   },
   "private": false,
   "dependencies": {
