@@ -1,6 +1,6 @@
 {
   "name": "ngx-colors2",
-  "version": "4.0.0-next.2",
+  "version": "4.0.0-next.3",
   "license": "MIT",
   "description": "A beautiful color picker for angular that let you choose from a color palette, using sliders (Hue, Lightness, Alpha sliders) or through text input(hex, rgba, hsla)",
   "peerDependencies": {
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/DominicWrege/ngx-colors"
   },
-  "homepage": "https://ngx-colors.web.app/",
+  "homepage": "https://github.com/DominicWrege/ngx-colors",
   "keywords": [
     "ColorPicker",
     "Angular",
@@ -25,6 +25,6 @@
     "Color Picker"
   ],
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.8.0"
   }
 }
