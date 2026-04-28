@@ -17,16 +17,9 @@ export class Rgba {
 
   public toString(): string {
     this.denormalize();
-    let output =
-      "rgb" +
-      (this.a != 1 ? "a(" : "(") +
-      this.r +
-      ", " +
-      this.g +
-      ", " +
-      this.b +
-      (this.a != 1 ? ", " + this.a.toPrecision(2) + ")" : ")");
-    return output;
+    return this.a !== 1
+      ? `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a.toPrecision(2)})`
+      : `rgb(${this.r}, ${this.g}, ${this.b})`;
   }
 }
 
@@ -79,17 +72,9 @@ export class Hsla {
     return this;
   }
   public toString(): string {
-    let output =
-      "hsl" +
-      (this.a != 1 ? "a(" : "(") +
-      this.h +
-      ", " +
-      this.s +
-      "%, " +
-      this.l +
-      "%" +
-      (this.a != 1 ? ", " + this.a.toPrecision(2) + ")" : ")");
-    return output;
+    return this.a !== 1
+      ? `hsla(${this.h}, ${this.s}%, ${this.l}%, ${this.a.toPrecision(2)})`
+      : `hsl(${this.h}, ${this.s}%, ${this.l}%)`;
   }
 }
 
@@ -111,8 +96,6 @@ export class Cmyk {
   }
   public toString(): string {
     this.denormalize();
-    let output =
-      "cmyk(" + this.c + ", " + this.m + ", " + this.y + ", " + this.k + ")";
-    return output;
+    return `cmyk(${this.c}, ${this.m}, ${this.y}, ${this.k})`;
   }
 }

@@ -15,8 +15,8 @@
     >
       <div
         class="cursor"
-        [style.top.px]="slider()?.v"
-        [style.left.px]="slider()?.s"
+        [style.top.px]="slider()?.value"
+        [style.left.px]="slider()?.saturation"
       >
         <div></div>
       </div>
@@ -43,7 +43,7 @@
           [rgX]="1"
           (newValue)="onSliderChange('hue', $event)"
         >
-          <div class="sliderCursor" [style.left.px]="slider()?.h">
+          <div class="sliderCursor" [style.left.px]="slider()?.hue">
             <div><div></div></div>
           </div>
         </div>
@@ -61,7 +61,7 @@
             class="alpha-gradient"
             [ngStyle]="getBackgroundColor(alphaSliderColor)"
           ></div>
-          <div class="sliderCursor" [style.left.px]="slider()?.a">
+          <div class="sliderCursor" [style.left.px]="slider()?.alpha">
             <div><div></div></div>
           </div>
         </div>

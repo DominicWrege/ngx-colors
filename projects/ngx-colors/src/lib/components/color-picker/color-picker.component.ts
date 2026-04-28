@@ -14,12 +14,24 @@ import {
   inject,
 } from "@angular/core";
 
-import { SliderDimension, SliderPosition } from "../../clases/slider";
-
 import { ConverterService } from "../../services/converter.service";
 import { SliderDirective } from "../../directives/slider.directive";
 import { NgStyle } from "@angular/common";
 import { Hsva } from "../../clases/formats";
+
+export interface SliderPosition {
+  hue: number;
+  saturation: number;
+  value: number;
+  alpha: number;
+}
+
+export interface SliderDimension {
+  hue: number;
+  saturation: number;
+  value: number;
+  alpha: number;
+}
 
 @Component({
   selector: "color-picker",
@@ -60,7 +72,7 @@ export class ColorPickerComponent
     if (!this.color()) {
       this.setColor(new Hsva(0, 1, 1, 1));
     }
-    this.slider.set(new SliderPosition(0, 0, 0, 0));
+    this.slider.set({ hue: 0, saturation: 0, value: 0, alpha: 0 });
     this.update();
   }
 
@@ -75,7 +87,12 @@ export class ColorPickerComponent
   ngAfterViewInit(): void {
     const hueWidth = this.hueSlider()?.nativeElement.offsetWidth || 140;
     const alphaWidth = this.alphaSlider()?.nativeElement.offsetWidth || 140;
-    this.sliderDimMax = new SliderDimension(hueWidth, 220, 130, alphaWidth);
+    this.sliderDimMax = {
+      hue: hueWidth,
+      saturation: 220,
+      value: 130,
+      alpha: alphaWidth,
+    };
     this.update();
   }
 
@@ -134,14 +151,16 @@ export class ColorPickerComponent
       this.outputColor = this.hsva;
       this.selectedColor.set(this.service.hsvaToRgba(this.hsva).toString());
 
-      this.slider.set(
-        new SliderPosition(
-          horizontalPosition(this.hsva.h, this.sliderDimMax.h, 5),
-          horizontalPosition(this.hsva.s, this.sliderDimMax.s, 8),
-          (1 - this.hsva.v) * this.sliderDimMax.v - 8,
-          horizontalPosition(this.hsva.a, this.sliderDimMax.a, 5),
+      this.slider.set({
+        hue: horizontalPosition(this.hsva.h, this.sliderDimMax.hue, 5),
+        saturation: horizontalPosition(
+          this.hsva.s,
+          this.sliderDimMax.saturation,
+          8,
         ),
-      );
+        value: (1 - this.hsva.v) * this.sliderDimMax.value - 8,
+        alpha: horizontalPosition(this.hsva.a, this.sliderDimMax.alpha, 5),
+      });
     }
   }
 }
