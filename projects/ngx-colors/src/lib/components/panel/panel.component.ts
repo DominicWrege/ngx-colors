@@ -1,15 +1,11 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
   ElementRef,
-  HostListener,
-  HostBinding,
   viewChild,
   inject,
   signal,
   ChangeDetectionStrategy,
-  Signal,
 } from "@angular/core";
 
 import { ColorFormats } from "../../enums/formats";
