@@ -31,7 +31,7 @@ export class DetectChangeExampleComponent {
     this.color = this.colors[this.colorIndex];
   }
 
-  public logEvent(event: Event, trigger: any) {
+  public logEvent(event: any, trigger: any) {
     this.logs.unshift([this.logs.length + 1, trigger, event]);
   }
 }

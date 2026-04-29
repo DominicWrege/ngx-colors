@@ -15,8 +15,9 @@ import { PanelComponent } from "../components/panel/panel.component";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { ConverterService } from "../services/converter.service";
 import { formats } from "../helpers/formats";
-import { Direction } from "../types/direction";
 import { NgxColorsColor } from "../components/color-picker/color-picker.component";
+
+export type Direction = "ltr" | "rtl";
 
 @Directive({
   selector: "[ngx-colors-trigger]",

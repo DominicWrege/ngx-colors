@@ -23,7 +23,6 @@ import {
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
   host: {
-    "[style.background]": "gradient()",
     "[style.display]": "'block'",
   },
   standalone: false,
