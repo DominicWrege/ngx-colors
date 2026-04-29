@@ -11,7 +11,7 @@
   "author": "Dominic",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DominicWrege/ngx-colors"
+    "url": "git+https://github.com/DominicWrege/ngx-colors.git"
   },
   "keywords": [
     "ColorPicker",
